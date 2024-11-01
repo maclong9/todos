@@ -19,29 +19,36 @@ struct HTML: ResponseGenerator {
         self.content = content
     }
     
-    /// Wrap the html in default page structure with optional head content
+    /// Wrap html in page structure
     func wrapInLayout() -> String {
         """
-        <!DOCTYPE html>
+        <!doctype html>
         <html lang="en">
             <head>
                 <meta charset="utf-8">
                 <meta name="viewport" content="width=device-width, initial-scale=1">
-                <title>\(self.title) | Todos</title>
+                <title>\(self.title) | Swift Todos</title>
                 <meta name="description" content="\(self.description)">
+                <meta property="og:image" content="og.png">
+                <meta name="apple-itunes-app" content="app-id=APP_ID,affiliate-data=AFFILIATE_ID,app-argument=SOME_TEXT">
+                <link rel="stylesheet" href="styles.css">
+                <link rel="icon" href="icon.svg">
             </head>
             <body>
                 <header>
-                    <a href="/">Logo</a>
+                    <a id="logo" href="/">Swift Todos</a>
                     <nav>
-                        <a href="/dashboard">Get Started</a>
+                        <a class="btn primary" href="/dashboard">Get Started</a>
                     </nav>
                 </header>
                 <main>
                     \(self.content)
                 </main>
                 <footer>
-                    <small>© \(Calendar.current.component(.year, from: Date())) - Mac Long</small>
+                    <small>
+                        © \(Calendar.current.component(.year, from: Date())) -
+                        <a href="https://github.com/maclong9">Mac Long</a>
+                    </small>
                 </footer>
             </body>
         </html>

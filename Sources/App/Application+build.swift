@@ -51,12 +51,14 @@ func buildApplication(_ arguments: some AppArguments) async throws -> some Appli
         return HTTPResponse.Status.ok
     }
     
+    assert(FileManager.default.fileExists(atPath: "Public/styles.css"), "Set your working directory to the root folder of this example to get it to work")
+    
     let sessionAuthenticator = SessionAuthenticator(users: userRepository, context: AppRequestContext.self)
     // Add api routes managing todos
     TodoController(fluent: fluent, sessionAuthenticator: sessionAuthenticator).addRoutes(to: router.group("api/todos"))
     // Add api routes managing users
     UserController(fluent: fluent, sessionAuthenticator: sessionAuthenticator).addRoutes(to: router.group("api/users"))
-    // Add view routes
+    // Add web view routes
     WebController(fluent: fluent, sessionAuthenticator: sessionAuthenticator).addRoutes(to: router)
     
     var app = Application(

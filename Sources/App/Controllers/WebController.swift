@@ -14,7 +14,7 @@ struct RedirectMiddleware<Context: AuthRequestContext>: RouterMiddleware {
         if context.identity != nil {
             return try await next(request, context)
         } else {
-            return .redirect(to: "\(self.to)?from=\(request.uri)", type: .found)
+            return .redirect(to: "\(self.to)", type: .found)
         }
     }
 }
@@ -56,8 +56,28 @@ struct WebController {
     @Sendable func home(request: Request, context: Context) async throws -> HTML {
         return HTML(
             title: "Home",
-            description: "Take control of your life with this wonderful todo list application",
-            content: "<h1>hello, world</h1>")
+            description: "Take control of your life with this wonderful todo list application.",
+            content: """
+                <section class="container">
+                    <div class="left">
+                        <h1>
+                            Take Control of
+                            <span class="gradient-highlight">Your Life</span>
+                        </h1>
+                        <p>
+                           With this wonderful application, designed to make your life easier; while staying out of the way. Take the first step in your new journey.
+                        </p>
+                        <div class="btn-group">
+                            <a href="https://github.com/maclong9/todos" class="btn">View Source</a>
+                            <a href="https://www.apple.com/uk/app-store/" class="btn primary">
+                                Get the App
+                            </a>
+                        </div>
+                    </div>
+                    <img src="images/hero.png" />
+                </section>
+            """
+        )
     }
     
     /// Dashboard page listing todos and with add todo UI
@@ -71,18 +91,47 @@ struct WebController {
             "todos": todos,
         ]
         print(object)
+        
         return HTML(
             title: "Dashboard",
-            description: "Take control of your life with this wonderful todo list application",
-            content: "<h1>dashboard</h1>")
+            description: "Take control of your life with this wonderful todo list application.",
+            content: """
+                <h1>Welcome Back, \(user.name)</h1>
+            """
+        )
     }
     
     /// Login page
     @Sendable func login(request: Request, context: Context) async throws -> HTML {
         return HTML(
             title: "Dashboard",
-            description: "Take control of your life with this wonderful todo list application",
-            content: "<h1>login</h1>")
+            description: "Take control of your life with this wonderful todo list application.",
+            content: """
+            <form class="auth-form" action="/login" method="post">
+                <h1>Log In</h1>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input 
+                        type="email" 
+                        id="email" 
+                        name="email"
+                        required
+                    >
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input 
+                        type="password" 
+                        id="password" 
+                        name="password"
+                        required
+                    >
+                </div>
+                <button class="primary" type="submit">Log In</button>
+                <a href="/signup">No account yet?</a>
+            </form>
+            """
+        )
     }
     
     struct LoginDetails: Decodable {
@@ -108,7 +157,7 @@ struct WebController {
             // login failed return login HTML with failed comment
             var response = try HTML(
                 title: "Dashboard",
-                description: "Take control of your life with this wonderful todo list application",
+                description: "Take control of your life with this wonderful todo list application.",
                 content: "<h1>login</h1>"
             ).response(from: request, context: context)
             response.status = .unauthorized
@@ -122,12 +171,69 @@ struct WebController {
         let password: String
     }
     
+    /// Sign Up Page Content
+    struct signUpContent {
+        let error: String?
+        
+        func response() -> HTML {
+            return HTML(
+                title: "Sign Up",
+                description: "Take control of your life with this wonderful todo list application.",
+                content: """
+                <form class="auth-form" action="/signup" method="post">
+                    <span class="error">Error: \(error ?? "")</span>
+                    <h1>Sign Up</h1>
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input 
+                            type="text" 
+                            id="name" 
+                            name="name" 
+                            autocomplete="name"
+                            required
+                        >
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input 
+                            type="email" 
+                            id="email" 
+                            name="email"
+                            required
+                        >
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input 
+                            type="password" 
+                            id="password" 
+                            name="password"
+                            autocomplete="new-password"
+                            required
+                        >
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Confirm Password</label>
+                        <input 
+                            type="password" 
+                            id="password" 
+                            name="password"
+                            autocomplete="new-password"
+                            required
+                        >
+                    </div>
+                    <button class="primary" type="submit">Sign Up</button>
+                    <a href="/login">Already have an account?</a>
+                </form>
+                """
+            )
+        }
+    }
+    
     /// Signup page
     @Sendable func signup(request: Request, context: Context) async throws -> HTML {
-        return HTML(
-            title: "Sign Up",
-            description: "Take control of your life with this wonderful todo list application",
-            content: "<h1>sign up</h1>")
+        let content = signUpContent(error: "A user already exists with that email.")
+        return content.response()
     }
     
     /// Signup POST page
@@ -149,7 +255,7 @@ struct WebController {
             if error.status == .conflict {
                 return try HTML(
                     title: "Sign Up Error",
-                    description: "Take control of your life with this wonderful todo list application",
+                    description: "Take control of your life with this wonderful todo list application.",
                     content: "<h1>sign up error</h1>"
                 )
                 .response(from: request, context: context)
