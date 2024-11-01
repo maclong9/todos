@@ -1,17 +1,3 @@
-//===----------------------------------------------------------------------===//
-//
-// This source file is part of the Hummingbird server framework project
-//
-// Copyright (c) 2021-2021 the Hummingbird authors
-// Licensed under Apache License v2.0
-//
-// See LICENSE.txt for license information
-// See hummingbird/CONTRIBUTORS.txt for the list of Hummingbird authors
-//
-// SPDX-License-Identifier: Apache-2.0
-//
-//===----------------------------------------------------------------------===//
-
 import FluentKit
 import Foundation
 import Hummingbird
@@ -19,27 +5,26 @@ import HummingbirdAuth
 import HummingbirdFluent
 import NIO
 
-/// CRUD routes for todos
 struct TodoController {
     // Request context used by Todos routes.
     struct TodoContext: ChildRequestContext {
         var coreContext: CoreRequestContextStorage
         var user: User
-
+        
         init(context: AppRequestContext) throws {
             self.coreContext = context.coreContext
             // if user identity doesn't exist then throw an unauthorized HTTP error
             self.user = try context.requireIdentity()
         }
-
+        
         var requestDecoder: TodosAuthRequestDecoder {
             TodosAuthRequestDecoder()
         }
     }
-
+    
     let fluent: Fluent
     let sessionAuthenticator: SessionAuthenticator<AppRequestContext, UserRepository>
-
+    
     func addRoutes(to group: RouterGroup<AppRequestContext>) {
         group
             .add(middleware: self.sessionAuthenticator)
@@ -50,16 +35,16 @@ struct TodoController {
             .patch(":id", use: self.update)
             .delete(":id", use: self.deleteId)
     }
-
+    
     /// List all todos created by current user
     @Sendable func list(_ request: Request, context: TodoContext) async throws -> [Todo] {
         return try await context.user.$todos.get(on: self.fluent.db())
     }
-
+    
     struct CreateTodoRequest: ResponseCodable {
         var title: String
     }
-
+    
     /// Create new todo
     @Sendable func create(_ request: Request, context: TodoContext) async throws -> EditedResponse<Todo> {
         let todoRequest = try await request.decode(as: CreateTodoRequest.self, context: context)
@@ -72,7 +57,7 @@ struct TodoController {
         try await todo.update(on: db)
         return .init(status: .created, response: todo)
     }
-
+    
     /// Get todo
     @Sendable func get(_ request: Request, context: TodoContext) async throws -> Todo? {
         let id = try context.parameters.require("id", as: UUID.self)
@@ -81,12 +66,12 @@ struct TodoController {
             .with(\.$owner)
             .first()
     }
-
+    
     struct EditTodoRequest: ResponseCodable {
         var title: String?
         var completed: Bool?
     }
-
+    
     /// Edit todo
     @Sendable func update(_ request: Request, context: TodoContext) async throws -> Todo {
         let id = try context.parameters.require("id", as: UUID.self)
@@ -104,8 +89,8 @@ struct TodoController {
         try await todo.update(on: db)
         return todo
     }
-
-    /// delete todo
+    
+    /// Delete todo
     @Sendable func deleteId(_ request: Request, context: TodoContext) async throws -> HTTPResponse.Status {
         let id = try context.parameters.require("id", as: UUID.self)
         let db = self.fluent.db()

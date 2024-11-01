@@ -24,7 +24,7 @@ func buildApplication(_ arguments: some AppArguments) async throws -> some Appli
     // add migrations
     await fluent.migrations.add(CreateUser())
     await fluent.migrations.add(CreateTodo())
-
+    
     let fluentPersist = await FluentPersistDriver(fluent: fluent)
     // migrate
     if arguments.migrate || arguments.inMemoryDatabase {
@@ -33,7 +33,7 @@ func buildApplication(_ arguments: some AppArguments) async throws -> some Appli
     let userRepository = UserRepository(fluent: fluent)
     // router
     let router = Router(context: AppRequestContext.self)
-
+    
     // add logging middleware
     router.addMiddleware {
         LogRequestsMiddleware(.info)
@@ -50,13 +50,15 @@ func buildApplication(_ arguments: some AppArguments) async throws -> some Appli
     router.get("/health") { _, _ in
         return HTTPResponse.Status.ok
     }
-
+    
     let sessionAuthenticator = SessionAuthenticator(users: userRepository, context: AppRequestContext.self)
     // Add api routes managing todos
     TodoController(fluent: fluent, sessionAuthenticator: sessionAuthenticator).addRoutes(to: router.group("api/todos"))
     // Add api routes managing users
     UserController(fluent: fluent, sessionAuthenticator: sessionAuthenticator).addRoutes(to: router.group("api/users"))
-
+    // Add view routes
+    WebController(fluent: fluent, sessionAuthenticator: sessionAuthenticator).addRoutes(to: router)
+    
     var app = Application(
         router: router,
         configuration: .init(address: .hostname(arguments.hostname, port: arguments.port))

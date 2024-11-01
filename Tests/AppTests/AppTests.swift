@@ -4,18 +4,18 @@ import HummingbirdAuthTesting
 import HummingbirdTesting
 import XCTest
 
-final class AppTests: XCTestCase {
+final class AppTests: XCTestCase, @unchecked Sendable {
     struct TestArguments: AppArguments {
         var hostname: String { "localhost" }
         var port: Int { 8080 }
         var migrate: Bool { true }
         var inMemoryDatabase: Bool { true }
     }
-
+    
     enum TestError: Error {
         case unexpectedStatus(HTTPResponse.Status)
     }
-
+    
     func createUser(_ user: CreateUserRequest, client: some TestClientProtocol) async throws -> CreateUserResponse {
         try await client.execute(
             uri: "/api/users",
@@ -27,7 +27,7 @@ final class AppTests: XCTestCase {
             return try JSONDecoder().decode(CreateUserResponse.self, from: response.body)
         }
     }
-
+    
     func login(username: String, password: String, client: some TestClientProtocol) async throws -> String? {
         try await client.execute(
             uri: "/api/users/login",
@@ -39,7 +39,7 @@ final class AppTests: XCTestCase {
             return response.headers[.setCookie]
         }
     }
-
+    
     func urlEncodedLogin(username: String, password: String, client: some TestClientProtocol) async throws -> String? {
         try await client.execute(
             uri: "/login",
@@ -51,7 +51,7 @@ final class AppTests: XCTestCase {
             return response.headers[.setCookie]
         }
     }
-
+    
     func createTodo(_ todo: CreateTodoRequest, cookie: String? = nil, client: some TestClientProtocol) async throws -> Todo {
         var headers: HTTPFields = [.contentType: "application/json"]
         if let cookie = cookie {
@@ -68,7 +68,7 @@ final class AppTests: XCTestCase {
             return try JSONDecoder().decode(Todo.self, from: buffer)
         }
     }
-
+    
     func getTodo(_ id: String, cookie: String? = nil, client: some TestClientProtocol) async throws -> Todo? {
         return try await client.execute(
             uri: "/api/todos/\(id)",
@@ -79,7 +79,7 @@ final class AppTests: XCTestCase {
             return try JSONDecoder().decode(Todo.self, from: response.body)
         }
     }
-
+    
     func deleteTodo(_ id: String, cookie: String? = nil, client: some TestClientProtocol) async throws {
         return try await client.execute(
             uri: "/api/todos/\(id)",
@@ -89,7 +89,7 @@ final class AppTests: XCTestCase {
             guard response.status == .ok else { throw TestError.unexpectedStatus(response.status) }
         }
     }
-
+    
     func editTodo(_ id: String, _ todo: EditTodoRequest, cookie: String? = nil, client: some TestClientProtocol) async throws -> Todo? {
         var headers: HTTPFields = [.contentType: "application/json"]
         if let cookie = cookie {
@@ -105,16 +105,16 @@ final class AppTests: XCTestCase {
             return try JSONDecoder().decode(Todo.self, from: response.body)
         }
     }
-
+    
     // MARK: tests
-
+    
     func testCreateUser() async throws {
         let app = try await buildApplication(TestArguments())
         try await app.test(.router) { client in
             _ = try await self.createUser(.init(name: "Tom Jones", email: "t@jones.com", password: "password123"), client: client)
         }
     }
-
+    
     func testLogin() async throws {
         let app = try await buildApplication(TestArguments())
         try await app.test(.router) { client in
@@ -122,7 +122,7 @@ final class AppTests: XCTestCase {
             _ = try await self.login(username: "t@jones.com", password: "password123", client: client)
         }
     }
-
+    
     func testURLEncodedLogin() async throws {
         let app = try await buildApplication(TestArguments())
         try await app.test(.router) { client in
@@ -131,7 +131,7 @@ final class AppTests: XCTestCase {
             XCTAssertNotNil(cookie)
         }
     }
-
+    
     func testSession() async throws {
         let app = try await buildApplication(TestArguments())
         try await app.test(.router) { client in
@@ -146,7 +146,7 @@ final class AppTests: XCTestCase {
             }
         }
     }
-
+    
     func testCreateTodo() async throws {
         let app = try await buildApplication(TestArguments())
         try await app.test(.router) { client in
@@ -156,7 +156,7 @@ final class AppTests: XCTestCase {
             XCTAssertEqual(todo.title, "Write more tests")
         }
     }
-
+    
     func testGetTodo() async throws {
         let app = try await buildApplication(TestArguments())
         try await app.test(.router) { client in
@@ -167,7 +167,7 @@ final class AppTests: XCTestCase {
             XCTAssertEqual(getTodo?.title, "Write more tests")
         }
     }
-
+    
     func testDeleteTodo() async throws {
         let app = try await buildApplication(TestArguments())
         try await app.test(.router) { client in
@@ -175,7 +175,7 @@ final class AppTests: XCTestCase {
             let cookie = try await self.login(username: "t@jones.com", password: "password123", client: client)
             let todo = try await self.createTodo(.init(title: "Write more tests"), cookie: cookie, client: client)
             try await self.deleteTodo(todo.id, cookie: cookie, client: client)
-
+            
             do {
                 _ = try await self.getTodo(todo.id, cookie: cookie, client: client)
             } catch TestError.unexpectedStatus(let status) {
@@ -185,7 +185,7 @@ final class AppTests: XCTestCase {
             }
         }
     }
-
+    
     func testEditTodo() async throws {
         let app = try await buildApplication(TestArguments())
         try await app.test(.router) { client in
@@ -194,12 +194,12 @@ final class AppTests: XCTestCase {
             let todo = try await self.createTodo(.init(title: "Write more tests"), cookie: cookie, client: client)
             _ = try await self.editTodo(todo.id, .init(title: "Written tests", completed: true), cookie: cookie, client: client)
             let editedTodo = try await self.getTodo(todo.id, cookie: cookie, client: client)
-
+            
             XCTAssertEqual(editedTodo?.title, "Written tests")
             XCTAssertEqual(editedTodo?.completed, true)
         }
     }
-
+    
     func testUnauthorizedEditTodo() async throws {
         let app = try await buildApplication(TestArguments())
         try await app.test(.router) { client in
@@ -223,21 +223,21 @@ extension AppTests {
         let email: String
         let password: String
     }
-
+    
     struct CreateUserResponse: Codable {
         var id: UUID
     }
-
+    
     struct CreateTodoRequest: Codable {
         let title: String
     }
-
+    
     struct Todo: Codable {
         var id: String
         let title: String
         let completed: Bool
     }
-
+    
     struct EditTodoRequest: Codable {
         var title: String?
         var order: Int?
