@@ -65,7 +65,7 @@ struct WebController {
                             <span class="gradient-highlight">Your Life</span>
                         </h1>
                         <p>
-                           With this wonderful application, designed to make your life easier; while staying out of the way. Take the first step in your new journey.
+                           With this wonderful application, designed to make your life easier while staying out of the way. Take the first step in your new journey.
                         </p>
                         <div class="btn-group">
                             <a href="https://github.com/maclong9/todos" class="btn">View Source</a>
@@ -181,7 +181,7 @@ struct WebController {
                 description: "Take control of your life with this wonderful todo list application.",
                 content: """
                 <form class="auth-form" action="/signup" method="post">
-                    <span class="error">Error: \(error ?? "")</span>
+                    \(error != nil ? "<span class=\"error\"><b>Error</b>: \(error ?? "")</span>" : "")
                     <h1>Sign Up</h1>
                     <div class="form-group">
                         <label for="name">Name</label>
@@ -232,7 +232,7 @@ struct WebController {
     
     /// Signup page
     @Sendable func signup(request: Request, context: Context) async throws -> HTML {
-        let content = signUpContent(error: "A user already exists with that email.")
+        let content = signUpContent(error: nil)
         return content.response()
     }
     
@@ -250,13 +250,12 @@ struct WebController {
             // redirect to login page
             return .redirect(to: "/login", type: .found)
         } catch let error as HTTPError {
-            // if user creation throws a conflict ie the email is already being used by
-            // another user then return signup page with error message
+            // if user creation throws a conflict ie the email is already being used by another user then return signup page with error message
             if error.status == .conflict {
                 return try HTML(
-                    title: "Sign Up Error",
+                    title: "Sign Up",
                     description: "Take control of your life with this wonderful todo list application.",
-                    content: "<h1>sign up error</h1>"
+                    content: signUpContent(error: error.localizedDescription).response().content
                 )
                 .response(from: request, context: context)
             } else {

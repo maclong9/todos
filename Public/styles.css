@@ -67,6 +67,7 @@
         background: var(--color-base);
         color: var(--color-text);
         text-wrap: pretty;
+        overflow-x: hidden;
     }
     
     body {
@@ -92,8 +93,11 @@
     main {
         flex-grow: 1;
         max-width: 1024px;
-        margin: 0 auto;
         padding: 1rem;
+        
+        @media(min-width: 640px) {
+            margin: 0 auto;
+        }
     }
     
     footer {
@@ -180,8 +184,10 @@
         padding: 32px;
         border-radius: 12px;
         box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
-        width: 350px;
         background: var(--color-surface);
+        position: absolute;
+        width: 72.8vw;
+        top: 15%;
         
         h1 {
             margin: 1rem 0;
@@ -198,6 +204,11 @@
         
         button {
             padding: .8rem;
+        }
+        
+        @media(min-width: 640px) {
+            width: 350px;
+            position: static;
         }
     }
     
@@ -232,35 +243,24 @@
             }
         }
     }
-        
-    .error {
-        background: var(--color-error);
-        width: 100%;
-        padding: .5rem .75rem;
-        border-radius: 8px;
-        margin: 0 auto;
-    }
 }
 
 @layer utilities {
     .gradient-highlight {
         background-image: linear-gradient(
-        to bottom right,
-        var(--color-primary),
-        var(--color-secondary)
+            to bottom right,
+            var(--color-primary),
+            var(--color-secondary)
         );
         background-clip: text;
         color: transparent;
     }
-}
-@media (max-width: 480px) {
-    .bd-examples {
-        margin-right: -0.75rem;
-        margin-left: -0.75rem;
-    }
     
-    .bd-examples > [class^="col-"] {
-        padding-right: 0.75rem;
-        padding-left: 0.75rem;
+    .error {
+        background: var(--color-error);
+        width: 100%;
+        padding: .5rem .75rem;
+        border-radius: 8px;
+        font-size: 12px;
     }
 }
