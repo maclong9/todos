@@ -54,29 +54,9 @@ struct WebController {
     
     /// Home page for marketing content
     @Sendable func home(request: Request, context: Context) async throws -> HTML {
-        return HTML(
+        HTML(
             title: "Home",
-            description: "Take control of your life with this wonderful todo list application.",
-            content: """
-                <section class="container">
-                    <div class="left">
-                        <h1>
-                            Take Control of
-                            <span class="gradient-highlight">Your Life</span>
-                        </h1>
-                        <p>
-                           With this wonderful application, designed to make your life easier while staying out of the way. Take the first step in your new journey.
-                        </p>
-                        <div class="btn-group">
-                            <a href="https://github.com/maclong9/todos" class="btn">View Source</a>
-                            <a href="https://www.apple.com/uk/app-store/" class="btn primary">
-                                Get the App
-                            </a>
-                        </div>
-                    </div>
-                    <img src="images/hero.png" />
-                </section>
-            """
+            content: HomeView().render()
         )
     }
     
@@ -85,53 +65,20 @@ struct WebController {
         // get user and list of todos attached to user from database
         let user = try context.requireIdentity()
         let todos = try await user.$todos.get(on: self.fluent.db())
-        // Render todos template and return as HTML
-        let object: [String: Any] = [
+        /*let object: [String: Any] = [
             "name": user.name,
             "todos": todos,
-        ]
-        print(object)
+        ]*/
         
         return HTML(
             title: "Dashboard",
-            description: "Take control of your life with this wonderful todo list application.",
-            content: """
-                <h1>Welcome Back, \(user.name)</h1>
-            """
+            content: DashboardView(name: "placeholder").render()
         )
     }
     
     /// Login page
     @Sendable func login(request: Request, context: Context) async throws -> HTML {
-        return HTML(
-            title: "Dashboard",
-            description: "Take control of your life with this wonderful todo list application.",
-            content: """
-            <form class="auth-form" action="/login" method="post">
-                <h1>Log In</h1>
-                <div class="form-group">
-                    <label for="email">Email</label>
-                    <input 
-                        type="email" 
-                        id="email" 
-                        name="email"
-                        required
-                    >
-                </div>
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <input 
-                        type="password" 
-                        id="password" 
-                        name="password"
-                        required
-                    >
-                </div>
-                <button class="primary" type="submit">Log In</button>
-                <a href="/signup">No account yet?</a>
-            </form>
-            """
-        )
+        HTML(title: "Log In", content: AuthView(isLogin: true).render())
     }
     
     struct LoginDetails: Decodable {
@@ -142,25 +89,43 @@ struct WebController {
     /// Login POST page
     @Sendable func loginDetails(request: Request, context: Context) async throws -> Response {
         let details = try await request.decode(as: LoginDetails.self, context: context)
-        // check if user exists in the database and then verify the entered password
-        // against the one stored in the database. If it is correct then login in user
-        if let user = try await User.login(
-            email: details.email,
-            password: details.password,
-            db: fluent.db()
-        ) {
-            // create session
-            try context.sessions.setSession(user.requireID())
-            // redirect to home page
-            return .redirect(to: request.uri.queryParameters.get("from") ?? "/", type: .found)
-        } else {
-            // login failed return login HTML with failed comment
-            var response = try HTML(
-                title: "Dashboard",
-                description: "Take control of your life with this wonderful todo list application.",
-                content: "<h1>login</h1>"
-            ).response(from: request, context: context)
-            response.status = .unauthorized
+        print("Login attempt for:", details.email)
+        
+        do {
+            // check if user exists in the database and then verify the entered password
+            if let user = try await User.login(
+                email: details.email,
+                password: details.password,
+                db: fluent.db()
+            ) {
+                // create session
+                try context.sessions.setSession(user.requireID())
+                // redirect to dashboard page
+                return .redirect(to: "/dashboard", type: .found)
+            } else {
+                let errorHTML = HTML(
+                    title: "Log In",
+                    content: AuthView(isLogin: true, errorMessage: "Invalid credentials").render()
+                )
+                var response = try errorHTML.response(from: request, context: context)
+                response.status = .badRequest
+                return response
+            }
+        } catch let error as FluentError {
+            let errorHTML = HTML(
+                title: "Log In",
+                content: AuthView(isLogin: true, errorMessage: error.localizedDescription).render()
+            )
+            var response = try errorHTML.response(from: request, context: context)
+            response.status = .internalServerError
+            return response
+        } catch {
+            let errorHTML = HTML(
+                title: "Log In",
+                content: AuthView(isLogin: true, errorMessage: error.localizedDescription).render()
+            )
+            var response = try errorHTML.response(from: request, context: context)
+            response.status = .internalServerError
             return response
         }
     }
@@ -171,96 +136,35 @@ struct WebController {
         let password: String
     }
     
-    /// Sign Up Page Content
-    struct signUpContent {
-        let error: String?
-        
-        func response() -> HTML {
-            return HTML(
-                title: "Sign Up",
-                description: "Take control of your life with this wonderful todo list application.",
-                content: """
-                <form class="auth-form" action="/signup" method="post">
-                    \(error != nil ? "<span class=\"error\"><b>Error</b>: \(error ?? "")</span>" : "")
-                    <h1>Sign Up</h1>
-                    <div class="form-group">
-                        <label for="name">Name</label>
-                        <input 
-                            type="text" 
-                            id="name" 
-                            name="name" 
-                            autocomplete="name"
-                            required
-                        >
-                    </div>
-                    <div class="form-group">
-                        <label for="email">Email</label>
-                        <input 
-                            type="email" 
-                            id="email" 
-                            name="email"
-                            required
-                        >
-                    </div>
-                    <div class="form-group">
-                        <label for="password">Password</label>
-                        <input 
-                            type="password" 
-                            id="password" 
-                            name="password"
-                            autocomplete="new-password"
-                            required
-                        >
-                    </div>
-                    <div class="form-group">
-                        <label for="password">Confirm Password</label>
-                        <input 
-                            type="password" 
-                            id="password" 
-                            name="password"
-                            autocomplete="new-password"
-                            required
-                        >
-                    </div>
-                    <button class="primary" type="submit">Sign Up</button>
-                    <a href="/login">Already have an account?</a>
-                </form>
-                """
-            )
-        }
-    }
-    
     /// Signup page
     @Sendable func signup(request: Request, context: Context) async throws -> HTML {
-        let content = signUpContent(error: nil)
-        return content.response()
+        HTML(title: "Sign Up", content: AuthView().render())
     }
     
     /// Signup POST page
     @Sendable func signupDetails(request: Request, context: Context) async throws -> Response {
         let details = try await request.decode(as: SignupDetails.self, context: context)
         do {
-            // create new user
-            _ = try await User.create(
+            let user = try await User.create(
                 name: details.name,
                 email: details.email,
                 password: details.password,
                 db: self.fluent.db()
             )
-            // redirect to login page
-            return .redirect(to: "/login", type: .found)
+            // After successful signup, create session and log user in
+            try context.sessions.setSession(user.requireID())
+            return .redirect(to: "/dashboard", type: .found)
         } catch let error as HTTPError {
-            // if user creation throws a conflict ie the email is already being used by another user then return signup page with error message
             if error.status == .conflict {
-                return try HTML(
+                var response = try HTML(
                     title: "Sign Up",
-                    description: "Take control of your life with this wonderful todo list application.",
-                    content: signUpContent(error: error.localizedDescription).response().content
-                )
-                .response(from: request, context: context)
-            } else {
-                throw error
+                    description: "Take control o f your life with this wonderful todo list application.",
+                    content: AuthView(errorMessage: "Email already in use.").render()
+                ).response(from: request, context: context)
+                response.status = .badRequest
+                return response
             }
+            throw error
         }
     }
 }

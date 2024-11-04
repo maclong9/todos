@@ -111,10 +111,13 @@
         display: flex;
         align-items: center;
         
+        &.reverse {
+            flex-direction: row-reverse;
+        }
+        
         .left {
             display: flex;
             flex-direction: column;
-            margin-right: 5rem;
             
             h1 {
                 max-width: 18rem;
@@ -122,6 +125,10 @@
             
             p {
                 max-width: 26rem;
+            }
+            
+            @media(min-width: 640px) {
+                margin-right: 5rem;
             }
         }
         
@@ -233,7 +240,7 @@
             transition: all 0.2s ease;
             
             &:focus {
-                outline: none;
+                outline: 1px solid color-mix(in srgb, var(--color-info) 90%, white);
                 border-color: var(--color-info);
                 box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
             }
@@ -259,7 +266,7 @@
     .error {
         background: var(--color-error);
         width: 100%;
-        padding: .5rem .75rem;
+        padding: .5rem;
         border-radius: 8px;
         font-size: 12px;
     }

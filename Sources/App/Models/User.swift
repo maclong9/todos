@@ -58,17 +58,19 @@ extension User {
     
     /// Check user can login
     static func login(email: String, password: String, db: Database) async throws -> User? {
-        // check if user exists in the database and then verify the entered password
-        // against the one stored in the database. If it is correct then login in user
-        let user = try await User.query(on: db)
+        guard let user = try await User.query(on: db)
             .filter(\.$email == email)
-            .first()
-        guard let user = user else { return nil }
-        guard let passwordHash = user.passwordHash else { return nil }
-        // Verify the password against the hash stored in the database
-        let verified = try await NIOThreadPool.singleton.runIfActive { Bcrypt.verify(password, hash: passwordHash) }
-        guard verified else { return nil }
-        return user
+            .first(),
+            let passwordHash = user.passwordHash
+        else {
+            return nil
+        }
+        
+        let verified = try await NIOThreadPool.singleton.runIfActive {
+            Bcrypt.verify(password, hash: passwordHash)
+        }
+        
+        return verified ? user : nil
     }
 }
 

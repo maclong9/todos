@@ -10,8 +10,8 @@ struct HTML: ResponseGenerator {
     
     /// Initialize with default values
     init(
-        title: String = "Home",
-        description: String = "A simple web application",
+        title: String,
+        description: String = "Take control of your life with this wonderful todo list application.",
         content: String
     ) {
         self.title = title
