@@ -1,10 +1,3 @@
-//
-//  LayoutView.swift
-//  todos-auth-fluent
-//
-//  Created by Mac Long on 2024-11-04.
-//
-
 import Foundation
 
 struct LayoutView {
