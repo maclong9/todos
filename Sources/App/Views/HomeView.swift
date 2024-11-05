@@ -30,12 +30,24 @@ struct HomeView {
     """
   }
 
-  func scrollLock() -> String {
+  func featureList() -> String {
     """
-    <section class="scroll-lock">
-        <!-- TODO: Feature 1 -->
-        <!-- TODO: Feature 2 -->
-        <!-- TODO: Feature 3 -->
+    <section class="features">
+        <div class="feature">
+            <span class="icon">🎯</span>
+            <h2>Reach Your Goals Faster</h2>
+            <p>With quick and easy task management.</p>
+        </div>
+        <div class="feature">
+            <span class="icon">📲</span>
+            <h2>On the Go</h2>
+            <p>Check off tasks as you rush about.</p>
+        </div>  
+        <div class="feature">
+            <span class="icon">😎</span>
+            <h2>Chill Out and Relax</h2>
+            <p>Life back on track, enjoy more time relaxing.</p>
+        </div>
     </section>
     """
   }
@@ -56,7 +68,7 @@ struct HomeView {
   func render() -> String {
     """
     \(heroSection())
-    \(scrollLock())
+    \(featureList())
     \(callToAction())
     """
   }
