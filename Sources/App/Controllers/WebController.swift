@@ -56,7 +56,7 @@ struct WebController {
     @Sendable func home(request: Request, context: Context) async throws -> HTML {
         HTML(
             title: "Home",
-            content: HomeView().render()
+            content: HomeView(appStoreUrl: "https://www.apple.com/uk/app-store/").render()
         )
     }
     
@@ -65,10 +65,10 @@ struct WebController {
         // get user and list of todos attached to user from database
         let user = try context.requireIdentity()
         let todos = try await user.$todos.get(on: self.fluent.db())
-        /*let object: [String: Any] = [
+        let object: [String: Any] = [
             "name": user.name,
             "todos": todos,
-        ]*/
+        ]
         
         return HTML(
             title: "Dashboard",
