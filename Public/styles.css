@@ -132,8 +132,8 @@
         
         nav {
             position: absolute;
-            right: 5%;
-            top: 9%;
+            right: 4.8%;
+            top: 15%;
             background: var(--color-surface);
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
             border-radius: 12px;
@@ -162,6 +162,24 @@
                 background: transparent;
                 box-shadow: none;
                 min-width: 0;
+            }
+        }
+        
+        @media(min-height: 480px) {
+            nav {
+                top: 11%;
+            }
+        }
+        
+        @media(min-height: 640px) {
+            nav {
+                top: 9%;
+            }
+        }
+        
+        @media(min-height: 768px) {
+            nav {
+                top: 8%;
             }
         }
     }
@@ -347,9 +365,10 @@
         border-radius: 12px;
         box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
         background: var(--color-surface);
-        position: absolute;
+        position: relative;
         width: 72.8vw;
         top: 15%;
+        margin: 0 auto;
         
         h1 {
             margin: 1rem 0;
