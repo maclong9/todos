@@ -7,7 +7,6 @@ struct HTML: ResponseGenerator {
     let description: String
     let content: String
     
-    /// Initialize with default values
     init(
         title: String,
         description: String = "Take control of your life with this wonderful todo list application.",
@@ -19,8 +18,16 @@ struct HTML: ResponseGenerator {
     }
     
     public func response(from request: Request, context: some RequestContext) throws -> Response {
-        let buffer = ByteBuffer(
-            string: LayoutView(title: title, description: description, content: content).render())
-        return .init(status: .ok, headers: [.contentType: "text/html"], body: .init(byteBuffer: buffer))
+        .init(
+            status: .ok,
+            headers: [.contentType: "text/html"],
+            body: .init(
+                byteBuffer: ByteBuffer(
+                    string: LayoutView(
+                        title: title,
+                        description: description,
+                        content: content
+                    )
+                    .render())))
     }
 }
