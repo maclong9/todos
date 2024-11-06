@@ -25,7 +25,7 @@ struct LayoutView {
           <body>
             <header>
               <a id="logo" href="/">Swift Todos</a>
-              <button class="unstyle menu-icon" onclick="toggleMenu()">
+              <button class="unstyle menu-icon">
                 <span></span>
                 <span></span>
                 <span></span>
@@ -39,41 +39,7 @@ struct LayoutView {
                 <a href="https://github.com/maclong9">Mac Long</a>
               </small>
             </footer>
-            <script>
-              // Define navigation elements
-              const menuIcon = document.querySelector(".menu-icon");
-              const dropdown = document.querySelector("nav");
-
-              /**
-               * Toggles the menu icon animation and dropdown visibility
-               * @function toggleMenu
-               * @description Toggles the 'active' class on both the menu icon and dropdown elements
-               * @returns {void}
-               * @example
-               * <button onclick="toggleMenu()">Toggle Menu</button>
-               */
-              function toggleMenu() {
-                menuIcon.classList.toggle("active");
-                dropdown.classList.toggle("active");
-              }
-
-              /**
-               * Event listener for handling clicks outside the menu
-               * @function
-               * @param {MouseEvent} event - The click event object
-               * @description Closes the dropdown menu when clicking outside of the menu icon or dropdown area
-               * @listens document#click
-               */
-              document.addEventListener("click", function (event) {
-                if (
-                  !menuIcon.contains(event.target) &&
-                  !dropdown.contains(event.target)
-                ) {
-                  menuIcon.classList.remove("active");
-                  dropdown.classList.remove("active");
-                }
-              });
-            </script>
+            <script src="scripts/layout.js"></script>
           </body>
         </html>
         """

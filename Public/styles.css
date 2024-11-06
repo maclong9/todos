@@ -1,4 +1,10 @@
-@layer tokens, typography, base, layout, components, utilities;
+@layer
+  tokens,
+  typography,
+  base,
+  layout,
+  components,
+  utilities;
 
 @layer tokens {
     :root {
@@ -119,7 +125,7 @@
                 }
                 
                 span:nth-child(3) {
-                    transform: rotate(-45deg) translate(6.5px, -6.5px);
+                    transform: rotate(-45deg) translate(5.5px, -5.5px);
                 }
             }
         }
@@ -135,13 +141,17 @@
             padding: 1rem;
             display: none;
             z-index: 50;
-
+            
             &.active {
                 display: block;
             }
         }
         
         @media(min-width: 640px) {
+            width: 100%;
+            max-width: 1024px;
+            margin: 0 auto;
+
             .menu-icon {
                 display: none;
             }
@@ -178,17 +188,15 @@
 
 @layer components {
     .container {
-        display: flex;
-        flex-direction: column-reverse;
+        display: grid;
+        grid-template-columns: 1fr;
         align-items: start;
-        
-        &.reverse {
-            flex-direction: row-reverse;
-        }
+        gap: 2rem;
         
         .left {
             display: flex;
             flex-direction: column;
+            order: 2;
             
             h1 {
                 max-width: 18rem;
@@ -203,20 +211,36 @@
         img {
             width: min(600px, 75vw);
             height: auto;
-            margin: 1rem auto;
-            
-            @media (min-width: 640px) {
-                margin: 1rem -2.5rem auto;
-                width: min(600px, 35vw);
-                display: block;
-            }
+            margin: 0 auto;
+            order: 1;
         }
         
         @media (min-width: 640px) {
-            flex-direction: row;
+            grid-template-columns: repeat(2, 1fr);
             align-items: center;
-            justify-content: center;
             gap: 6rem;
+            
+            .left {
+                order: 1;
+            }
+            
+            img {
+                width: min(600px, 35vw);
+                order: 2;
+                margin-right: -2.3rem;
+            }
+        }
+        
+        &.reverse {
+            @media (min-width: 640px) {
+                .left {
+                    order: 2;
+                }
+                
+                img {
+                    order: 1;
+                }
+            }
         }
     }
     
@@ -254,12 +278,12 @@
         }
         
         &.unstyle {
-                background: none;
-                border-radius: 0;
-                font-size: inherit;
-                font-weight: inherit;
-                padding: 0;
-            }
+            background: none;
+            border-radius: 0;
+            font-size: inherit;
+            font-weight: inherit;
+            padding: 0;
+        }
     }
     
     .features {
