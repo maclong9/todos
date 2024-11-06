@@ -1,5 +1,5 @@
 /**
- * Event listener for handling clicks outside the menu
+ * Event listener for toggling the mobile menu
  * @param {MouseEvent} event - The click event object
  */
 document.addEventListener("click", ({ target }) => {
