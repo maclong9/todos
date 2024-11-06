@@ -56,7 +56,7 @@ struct WebController {
     @Sendable func home(request: Request, context: Context) async throws -> HTML {
         HTML(
             title: "Home",
-            content: HomeView(appStoreUrl: "https://www.apple.com/uk/app-store/").render()
+            content: HomeView().render()
         )
     }
     

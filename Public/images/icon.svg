@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Background -->
+  <rect x="0" y="0" width="512" height="512" rx="100" fill="#FF6B6B"/>
+  
+  <!-- Paper/List Background -->
+  <rect x="96" y="76" width="320" height="360" rx="20" fill="white"/>
+  
+  <!-- Circles for checkmarks -->
+  <circle cx="146" cy="160" r="12" fill="none" stroke="#333333" stroke-width="2"/>
+  <circle cx="146" cy="240" r="12" fill="none" stroke="#333333" stroke-width="2"/>
+  <circle cx="146" cy="320" r="12" fill="none" stroke="#333333" stroke-width="2"/>
+  
+  <!-- Checkmarks inside circles -->
+  <path d="M140,160 L144,164 L152,156" stroke="#333333" stroke-width="2" fill="none"/>
+  <path d="M140,240 L144,244 L152,236" stroke="#333333" stroke-width="2" fill="none"/>
+  
+  <!-- List Lines (starting after circles) -->
+  <g stroke="#333333" stroke-width="8">
+    <line x1="176" y1="160" x2="376" y2="160" stroke-opacity="0.2"/>
+    <line x1="176" y1="240" x2="376" y2="240" stroke-opacity="0.2"/>
+    <line x1="176" y1="320" x2="376" y2="320" stroke-opacity="0.2"/>
+  </g>
+  
+  <!-- Stylized Bird (representing Swift/Hummingbird) with reversed wing -->
+  <g transform="translate(340, 360) scale(0.8) rotate(-15)">
+    <!-- Wing (now pointing opposite direction) -->
+    <path d="M40,-5 C30,-25 10,-30 0,-20 C10,-15 25,-10 40,-5" fill="#FF9F1C"/>
+    <path d="M35,-8 C25,-25 10,-28 5,-20 C12,-15 25,-12 35,-8" fill="#FFB84C"/>
+    <!-- Body -->
+    <path d="M0,0 C30,-20 60,-15 80,0 C60,15 30,20 0,0 Z" fill="#FF9F1C"/>
+    <path d="M-10,-5 C20,-25 50,-20 70,-5 C50,10 20,15 -10,-5 Z" fill="#FFB84C"/>
+    <!-- Bird Eye -->
+    <circle cx="65" cy="-2" r="3" fill="#333333"/>
+  </g>
+  
+  <!-- Additional decorative elements -->
+  <circle cx="256" cy="400" r="12" fill="#FF6B6B" opacity="0.3"/>
+  <circle cx="156" cy="400" r="8" fill="#FF6B6B" opacity="0.2"/>
+  <circle cx="356" cy="400" r="8" fill="#FF6B6B" opacity="0.2"/>
+</svg>
