@@ -25,12 +25,12 @@ struct LayoutView {
           <body>
             <header>
               <a id="logo" href="/">Swift Todos</a>
-              <button class="unstyle menu-icon" aria-expanded="false" aria-label="Toggle menu" aria-controler="site-nav">
-                <span></span>
-                <span></span>
-                <span></span>
-              </button>
-              <nav>\(ActionButtons(isNavigation: true).render())</nav>
+              <nav id="main-navigation" popover>\(ActionButtons(isNavigation: true).render())</nav>
+                    <button class="unstyle menu-icon" aria-label="Toggle menu" popovertarget="main-navigation">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                      </button>
             </header>
             <main>\(content)</main>
             <footer>
@@ -39,7 +39,6 @@ struct LayoutView {
                 <a href="https://github.com/maclong9">Mac Long</a>
               </small>
             </footer>
-            <script src="scripts/layout.js"></script>
           </body>
         </html>
         """
