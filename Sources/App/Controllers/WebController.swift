@@ -34,10 +34,12 @@ struct WebController {
     func addRoutes(to router: Router<Context>) {
         // Unauthenticated routes
         router.group()
-            .get("/login", use: self.login)
-            .post("/login", use: self.loginDetails)
-            .get("/signup", use: self.signup)
-            .post("/signup", use: self.signupDetails)
+            .get("/log-in", use: self.login)
+            .post("/log-in", use: self.loginDetails)
+            .get("/sign-up", use: self.signup)
+            .post("/sig-nup", use: self.signupDetails)
+            .get("/reset-password", use: self.reset)
+            .post("/reset-password", use: self.resetDetails)
             .get("/", use: self.home)
         
         // Authenticated routes
@@ -69,7 +71,7 @@ struct WebController {
     
     /// Signup page
     @Sendable func signup(request: Request, context: Context) async throws -> HTML {
-        HTML(title: "Sign Up", content: AuthView().render())
+        HTML(title: "Sign Up", content: AuthView(action: AuthAction.signup).render())
     }
     
     /// Signup POST page
@@ -96,7 +98,7 @@ struct WebController {
                 var response = try HTML(
                     title: "Sign Up",
                     description: "Take control of your life with this wonderful todo list application.",
-                    content: AuthView(errorMessage: String(error.description.split(separator: ",")[1])).render()
+                    content: AuthView(action: AuthAction.signup, errorMessage: String(error.description.split(separator: ",")[1])).render()
                 ).response(from: request, context: context)
                 response.status = error.status
                 return response
@@ -107,14 +109,13 @@ struct WebController {
     
     /// Login page
     @Sendable func login(request: Request, context: Context) async throws -> HTML {
-        HTML(title: "Log In", content: AuthView(isLogin: true).render())
+        HTML(title: "Log In", content: AuthView(action: AuthAction.login).render())
     }
     
     struct LoginDetails: Decodable {
         let email: String
         let password: String
     }
-    
     /// Login POST page
     @Sendable func loginDetails(request: Request, context: Context) async throws -> Response {
         let details = try await request.decode(as: LoginDetails.self, context: context)
@@ -134,7 +135,7 @@ struct WebController {
             } else {
                 let errorHTML = HTML(
                     title: "Log In",
-                    content: AuthView(isLogin: true, errorMessage: "Invalid credentials").render()
+                    content: AuthView(action: AuthAction.login, errorMessage: "Invalid credentials").render()
                 )
                 var response = try errorHTML.response(from: request, context: context)
                 response.status = .badRequest
@@ -143,7 +144,7 @@ struct WebController {
         } catch let error as FluentError {
             let errorHTML = HTML(
                 title: "Log In",
-                content: AuthView(isLogin: true, errorMessage: error.localizedDescription).render()
+                content: AuthView(action: AuthAction.login, errorMessage: error.localizedDescription).render()
             )
             var response = try errorHTML.response(from: request, context: context)
             response.status = .internalServerError
@@ -151,12 +152,27 @@ struct WebController {
         } catch {
             let errorHTML = HTML(
                 title: "Log In",
-                content: AuthView(isLogin: true, errorMessage: error.localizedDescription).render()
+                content: AuthView(action: AuthAction.login, errorMessage: error.localizedDescription).render()
             )
             var response = try errorHTML.response(from: request, context: context)
             response.status = .internalServerError
             return response
         }
+    }
+    
+    /// Reset password page
+    @Sendable func reset(request: Request, context: Context) async throws -> HTML {
+        HTML(title: "Reset Password", content: AuthView(action: AuthAction.resetPassword).render())
+    }
+    
+    struct ResetDetails: Decodable {
+        let email: String
+    }
+    /// Reset password POST page
+    @Sendable func resetDetails(request: Request, context: Context) async throws -> Response {
+        let details = try await request.decode(as: ResetDetails.self, context: context)
+        print("Login attempt for:", details.email)
+        return .redirect(to: "/")
     }
     
     /// Renders the dashboard page that provides CRUD operations for managing todos

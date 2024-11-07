@@ -9,7 +9,7 @@ struct ActionButtons {
         """
         <div class="btn-group \(isNavigation ? "col" : "")">
         <a
-            href="/signup"
+            href="/sign-up"
             class="btn"
             >Get Started</a
           >
