@@ -24,7 +24,7 @@ struct HomeView {
         <div class="feature">
             <span class="icon">🎯</span>
             <h2>Reach Your Goals Faster</h2>
-            <p>With quick, simple` and easy task management.</p>
+            <p>With quick, simple and easy task management.</p>
         </div>
         <div class="feature">
             <span class="icon">📲</span>

@@ -25,7 +25,7 @@ struct LayoutView {
           <body>
             <header>
               <a id="logo" href="/">Swift Todos</a>
-              <button class="unstyle menu-icon">
+              <button class="unstyle menu-icon" aria-expanded="false" aria-label="Toggle menu" aria-controler="site-nav">
                 <span></span>
                 <span></span>
                 <span></span>
