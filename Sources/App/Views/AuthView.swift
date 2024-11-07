@@ -64,8 +64,8 @@ struct AuthView {
             <label for="password">Confirm Password</label>
             <input 
                 type="password" 
-                id="password" 
-                name="password"
+                id="confirmPassword" 
+                name="confirmPassword"
                 autocomplete="new-password"
                 required
             >
