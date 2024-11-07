@@ -132,18 +132,25 @@
         
         nav {
             position: absolute;
-            right: 4.8%;
-            top: 15%;
+            right: 0;
+            top: 0;
             background: var(--color-surface);
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
             border-radius: 12px;
             min-width: 100px;
             padding: 1rem;
-            display: none;
+            margin: 4rem 1.5rem;
             z-index: 50;
             
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.2s ease-in-out;
+            
             &.active {
-                display: block;
+                opacity: 1;
+                visibility: visible;
+                transform: translateY(0);
             }
         }
         
@@ -162,24 +169,11 @@
                 background: transparent;
                 box-shadow: none;
                 min-width: 0;
-            }
-        }
-        
-        @media(min-height: 480px) {
-            nav {
-                top: 11%;
-            }
-        }
-        
-        @media(min-height: 640px) {
-            nav {
-                top: 9%;
-            }
-        }
-        
-        @media(min-height: 768px) {
-            nav {
-                top: 8%;
+                margin: 0;
+                
+                opacity: 1;
+                visibility: visible;
+                transform: translateY(0);
             }
         }
     }
