@@ -16,6 +16,7 @@ struct AuthView {
                 type="email" 
                 id="email" 
                 name="email"
+                placeholder="Enter your email address"
                 required
             >
         </div>
@@ -25,6 +26,7 @@ struct AuthView {
                 type="password" 
                 id="password" 
                 name="password"
+                placeholder="Enter your password"
                 required
             >
         </div>
@@ -37,6 +39,7 @@ struct AuthView {
                 type="text" 
                 id="name" 
                 name="name" 
+                placeholder="Enter your full name"
                 autocomplete="name"
                 required
             >
@@ -47,6 +50,7 @@ struct AuthView {
                 type="email" 
                 id="email" 
                 name="email"
+                placeholder="Enter your email address"
                 required
             >
         </div>
@@ -56,6 +60,7 @@ struct AuthView {
                 type="password" 
                 id="password" 
                 name="password"
+                placeholder="Choose a strong password"
                 autocomplete="new-password"
                 required
             >
@@ -66,6 +71,7 @@ struct AuthView {
                 type="password" 
                 id="confirmPassword" 
                 name="confirmPassword"
+                placeholder="Re-enter your password"
                 autocomplete="new-password"
                 required
             >
