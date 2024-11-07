@@ -45,8 +45,10 @@ extension User {
         let existingUser = try await User.query(on: db)
             .filter(\.$email == email)
             .first()
-        // if user already exist throw conflict
-        guard existingUser == nil else { throw HTTPError(.conflict) }
+        // if user already exist throw conflict with descriptive message
+        guard existingUser == nil else {
+            throw HTTPError(.conflict, message: "Email address already in use")
+        }
         
         // Encrypt password on a separate thread
         let passwordHash = try await NIOThreadPool.singleton.runIfActive { Bcrypt.hash(password, cost: 12) }

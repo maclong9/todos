@@ -76,8 +76,10 @@ struct WebController {
     @Sendable func signupDetails(request: Request, context: Context) async throws -> Response {
         let details = try await request.decode(as: SignupDetails.self, context: context)
         do {
+            // Check passwords match first
             if details.password != details.confirmPassword {
-                throw HTTPError(.conflict, message: "Passwords do not match")
+                // Use badRequest for validation errors
+                throw HTTPError(.badRequest, message: "Passwords do not match")
             }
             
             let user = try await User.create(
@@ -86,17 +88,17 @@ struct WebController {
                 password: details.password,
                 db: self.fluent.db()
             )
-            // After successful signup, create session and log user in
+            
             try context.sessions.setSession(user.requireID())
             return .redirect(to: "/dashboard", type: .found)
         } catch let error as HTTPError {
-            if error.status == .conflict {
+            if error.status == .badRequest || error.status == .conflict {
                 var response = try HTML(
                     title: "Sign Up",
-                    description: "Take control o f your life with this wonderful todo list application.",
-                    content: AuthView(errorMessage: "Email already in use.").render()
+                    description: "Take control of your life with this wonderful todo list application.",
+                    content: AuthView(errorMessage: String(error.description.split(separator: ",")[1])).render()
                 ).response(from: request, context: context)
-                response.status = .badRequest
+                response.status = error.status
                 return response
             }
             throw error
