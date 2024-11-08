@@ -37,7 +37,7 @@ struct WebController {
             .get("/log-in", use: self.login)
             .post("/log-in", use: self.loginDetails)
             .get("/sign-up", use: self.signup)
-            .post("/sig-nup", use: self.signupDetails)
+            .post("/sign-up", use: self.signupDetails)
             .get("/reset-password", use: self.reset)
             .post("/reset-password", use: self.resetDetails)
             .get("/", use: self.home)
@@ -171,7 +171,7 @@ struct WebController {
     /// Reset password POST page
     @Sendable func resetDetails(request: Request, context: Context) async throws -> Response {
         let details = try await request.decode(as: ResetDetails.self, context: context)
-        print("Login attempt for:", details.email)
+        print("reset password for:", details.email)
         return .redirect(to: "/")
     }
     
@@ -180,14 +180,10 @@ struct WebController {
         // get user and list of todos attached to user from database
         let user = try context.requireIdentity()
         let todos = try await user.$todos.get(on: self.fluent.db())
-        let object: [String: Any] = [
-            "name": user.name,
-            "todos": todos,
-        ]
         
         return HTML(
             title: "Dashboard",
-            content: DashboardView(name: "placeholder").render()
+            content: DashboardView(user: user, todos: todos).render()
         )
     }
 }

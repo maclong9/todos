@@ -121,7 +121,7 @@ struct AuthView {
         let linkHref = action == .login ? "/sign-up" : "/log-in"
         
         return """
-        <form class="auth-form" action="\(action.rawValue.replacingOccurrences(of: "-", with: " "))" method="post">
+        <form class="surface auth-form" action="\(action.rawValue)" method="post">
             \(!errorMessage.isEmpty ? "<span class='error'>\(errorMessage)</span>" : "")
             <h1>\(titleText)</h1>
             \(generateInputs())
