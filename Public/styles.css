@@ -26,6 +26,12 @@ utilities;
         --color-warning: oklch(0.74 0.22 80);
         --color-error: oklch(0.66 0.26 20);
         --color-info: oklch(0.62 0.24 250);
+        
+        /* Radius */
+        --radius-small: 8px;
+        --radius-medium: 12px;
+        --radius-large: 16px;
+        --radius-full: 9999px;
 
         /* Effects */
         --color-overlay: oklch(0.2 0.1 260 / 0.5);
@@ -226,7 +232,7 @@ utilities;
         background: var(--color-surface);
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
         border: 0;
-        border-radius: 12px;
+        border-radius: var(--radi);
         min-width: 100px;
         padding: 1rem;
         z-index: 50;
@@ -277,7 +283,7 @@ utilities;
             height: 1.5px;
             background: var(--color-subtle);
             transition: 0.3s;
-            border-radius: 8px;
+            border-radius: var(--radius-small);
         }
 
         @media (min-width: 640px) {
@@ -317,7 +323,7 @@ utilities;
     button,
     .btn {
         background: var(--color-text);
-        border-radius: 8px;
+        border-radius: var(--radius-small);
         color: var(--color-base);
         font-size: 12px;
         font-weight: 600;
@@ -383,7 +389,7 @@ utilities;
         display: flex;
         flex-direction: column;
         align-items: center;
-        border-radius: 12px;
+        border-radius: var(--radius-medium);
         background: var(--color-surface);
         padding: 1rem;
 
@@ -502,7 +508,7 @@ utilities;
             justify-content: center;
 
             input {
-                border-radius: 8px 0 0 8px;
+                border-radius: var(--radius-small) 0 0 var(--radius-small);
             }
 
             .btn {
@@ -524,7 +530,7 @@ utilities;
 
     .surface {
         padding: 32px;
-        border-radius: 12px;
+        border-radius: var(--radius-medium);
         box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
         background: var(--color-surface);
     }
@@ -533,7 +539,7 @@ utilities;
         background: var(--color-error);
         width: 100%;
         padding: 0.5rem;
-        border-radius: 8px;
+        border-radius: var(--radius-small);
         font-size: 12px;
         font-weight: 600;
     }
