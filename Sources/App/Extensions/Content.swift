@@ -5,15 +5,18 @@ import Hummingbird
 struct HTML: ResponseGenerator {
     let title: String
     let description: String
+    let isLoggedIn: Bool?
     let content: String
     
     init(
         title: String,
         description: String = "Take control of your life with this wonderful todo list application.",
+        isLoggedIn: Bool? = false,
         content: String
     ) {
         self.title = title
         self.description = description
+        self.isLoggedIn = isLoggedIn
         self.content = content
     }
     
@@ -26,6 +29,7 @@ struct HTML: ResponseGenerator {
                     string: LayoutView(
                         title: title,
                         description: description,
+                        isLoggedIn: isLoggedIn ?? false,
                         content: content
                     )
                     .render())))

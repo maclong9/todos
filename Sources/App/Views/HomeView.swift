@@ -1,8 +1,14 @@
 struct HomeView {
-  func heroSection() -> String {
+    let isLoggedIn: Bool
+    
+    init(isLoggedIn: Bool = false) {
+        self.isLoggedIn = isLoggedIn
+    }
+    
+    func heroSection() -> String {
     """
-    <section class="container">
-      <div class="left">
+    <section class="grid">
+      <div class="text">
         <h1>
           Take Control of
           <span class="gradient-highlight">Your Life</span>
@@ -11,16 +17,16 @@ struct HomeView {
           With this wonderful application, designed to make your life easier while
           staying out of the way. Take the first step in your new journey.
         </p>
-        \(ActionButtons().render())
+        \(ActionButtons(isLoggedIn: isLoggedIn).render())
       </div>
       <img src="images/hero.svg" />
     </section>
     """
-  }
-
-  func featureList() -> String {
+    }
+    
+    func featureList() -> String {
     """
-    <section class="features">
+    <section class="grid gap three">
         <div class="feature">
             <span class="icon">🎯</span>
             <h2>Reach Your Goals Faster</h2>
@@ -38,27 +44,25 @@ struct HomeView {
         </div>
     </section>
     """
-  }
-
-  func callToAction() -> String {
+    }
+    
+    func callToAction() -> String {
     """
     <section>
         <div class="cta">
             <h2 class="gradient-highlight">Get Started Now</h1>
-            <p>
-                Sign up and get your life back on track! Stay organized, boost productivity, and achieve goals.
-            </p>
+            <p>Sign up and get your life back on track! Stay organized, boost productivity, and achieve goals.</p>
             \(ActionButtons().render())
         </div>
     </section>
     """
-  }
-
-  func render() -> String {
+    }
+    
+    func render() -> String {
     """
     \(heroSection())
     \(featureList())
     \(callToAction())
     """
-  }
+    }
 }

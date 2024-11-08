@@ -56,8 +56,9 @@ struct WebController {
     
     /// Home page for marketing content
     @Sendable func home(request: Request, context: Context) async throws -> HTML {
-        HTML(
+       return HTML(
             title: "Home",
+            isLoggedIn: true,
             content: HomeView().render()
         )
     }
@@ -71,7 +72,7 @@ struct WebController {
     
     /// Signup page
     @Sendable func signup(request: Request, context: Context) async throws -> HTML {
-        HTML(title: "Sign Up", content: AuthView(action: AuthAction.signup).render())
+        HTML(title: "Sign Up", content: AuthView(action: .signup).render())
     }
     
     /// Signup POST page
@@ -98,7 +99,7 @@ struct WebController {
                 var response = try HTML(
                     title: "Sign Up",
                     description: "Take control of your life with this wonderful todo list application.",
-                    content: AuthView(action: AuthAction.signup, errorMessage: String(error.description.split(separator: ",")[1])).render()
+                    content: AuthView(action: .signup, errorMessage: String(error.description.split(separator: ",")[1])).render()
                 ).response(from: request, context: context)
                 response.status = error.status
                 return response
@@ -109,7 +110,7 @@ struct WebController {
     
     /// Login page
     @Sendable func login(request: Request, context: Context) async throws -> HTML {
-        HTML(title: "Log In", content: AuthView(action: AuthAction.login).render())
+        HTML(title: "Log In", content: AuthView(action: .login).render())
     }
     
     struct LoginDetails: Decodable {
@@ -135,7 +136,7 @@ struct WebController {
             } else {
                 let errorHTML = HTML(
                     title: "Log In",
-                    content: AuthView(action: AuthAction.login, errorMessage: "Invalid credentials").render()
+                    content: AuthView(action: .login, errorMessage: "Invalid credentials").render()
                 )
                 var response = try errorHTML.response(from: request, context: context)
                 response.status = .badRequest
@@ -144,7 +145,7 @@ struct WebController {
         } catch let error as FluentError {
             let errorHTML = HTML(
                 title: "Log In",
-                content: AuthView(action: AuthAction.login, errorMessage: error.localizedDescription).render()
+                content: AuthView(action: .login, errorMessage: error.localizedDescription).render()
             )
             var response = try errorHTML.response(from: request, context: context)
             response.status = .internalServerError
@@ -152,7 +153,7 @@ struct WebController {
         } catch {
             let errorHTML = HTML(
                 title: "Log In",
-                content: AuthView(action: AuthAction.login, errorMessage: error.localizedDescription).render()
+                content: AuthView(action: .login, errorMessage: error.localizedDescription).render()
             )
             var response = try errorHTML.response(from: request, context: context)
             response.status = .internalServerError
@@ -162,7 +163,7 @@ struct WebController {
     
     /// Reset password page
     @Sendable func reset(request: Request, context: Context) async throws -> HTML {
-        HTML(title: "Reset Password", content: AuthView(action: AuthAction.resetPassword).render())
+        HTML(title: "Reset Password", content: AuthView(action: .resetPassword).render())
     }
     
     struct ResetDetails: Decodable {
@@ -183,6 +184,7 @@ struct WebController {
         
         return HTML(
             title: "Dashboard",
+            isLoggedIn: user.name.isEmpty == false,
             content: DashboardView(user: user, todos: todos).render()
         )
     }

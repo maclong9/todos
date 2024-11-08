@@ -4,6 +4,7 @@ enum AuthAction: String {
     case signup = "sign-up"
     case login = "log-in"
     case resetPassword = "reset-password"
+    case updateProfile = "update-profile"
 }
 
 struct AuthView {
@@ -15,7 +16,7 @@ struct AuthView {
         self.errorMessage = errorMessage
     }
     
-    private var signupInputs: String {
+    public var signupInputs: String {
         """
         <div class="form-group">
             <label for="name">Name</label>
@@ -106,14 +107,16 @@ struct AuthView {
     
     private func generateInputs() -> String {
         switch action {
-        case .signup:
-            return signupInputs
-        case .login:
-            return loginInputs
-        case .resetPassword:
-            return resetPasswordInputs
+            case .signup, .updateProfile:
+                return signupInputs
+            case .login:
+                return loginInputs
+            case .resetPassword:
+                return resetPasswordInputs
         }
     }
+    
+    // TODO: Add placeholders for user's current information to `.updateProfile` view.
     
     func render() -> String {
         let titleText = action.rawValue.replacingOccurrences(of: "-", with: " ").capitalized
@@ -125,8 +128,18 @@ struct AuthView {
             \(!errorMessage.isEmpty ? "<span class='error'>\(errorMessage)</span>" : "")
             <h1>\(titleText)</h1>
             \(generateInputs())
-            <button class="primary" type="submit">\(titleText)</button>
-            \(action != .resetPassword ? "<a href='\(linkHref)'>\(linkText)</a>" : "")
+            \(action == .updateProfile ? """
+                <button class="destructive" style="margin-bottom: .5rem;" type="button" onclick="settings.close(); deletion.show()">
+                    Delete Account
+                </button>
+                <div class="btn-group">
+                  <button onclick="settings.close()">Cancel</button>
+                  <button class="primary" type="submit">\(titleText)</button>
+                </div>
+                """ :
+                "<button class='primary' type='submit'>\(titleText)</button>"
+            )
+            \(action != .updateProfile && action != .resetPassword ? "<a href='\(linkHref)'>\(linkText)</a>" : "")
         </form>
         """
     }
