@@ -129,7 +129,7 @@ struct AuthView {
             <h1>\(titleText)</h1>
             \(generateInputs())
             \(action == .updateProfile ? """
-                <button class="destructive" style="margin-bottom: .5rem;" type="button" onclick="settings.close(); deletion.show()">
+                <button class="destructive" style="margin-bottom: .5rem;" type="button" onclick="settings.close(); deletion.showModal()">
                     Delete Account
                 </button>
                 <div class="btn-group">

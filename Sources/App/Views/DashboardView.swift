@@ -7,7 +7,7 @@ struct DashboardView {
         <section class="dashboard">
             <header>
                 <h1>Welcome Back, \(user.name)</h1>
-                <button class="unstyle" onclick="settings.show()">⚙️</button>
+                <button class="unstyle" onclick="settings.showModal()">⚙️</button>
                 <dialog id="settings">
                     \(AuthView(action: .updateProfile).render())
                 </dialog>
@@ -18,7 +18,7 @@ struct DashboardView {
                        You will not be able to recover your account later.
                     </p>
                     <form class="btn-group" action="delete-account">
-                        <button onclick="deletion.close()">Cancel</button>
+                        <button type="button" onclick="deletion.close()">Cancel</button>
                         <button class="destructive" type="submit">Delete Account</button>
                     </form>
                 </dialog>
