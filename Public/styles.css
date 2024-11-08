@@ -34,7 +34,7 @@ utilities;
         --radius-full: 9999px;
 
         /* Effects */
-        --color-overlay: oklch(0.2 0.1 260 / 0.5);
+        --color-overlay: oklch(0.2 0.1 260 / 0.2);
         --color-shadow: oklch(0.2 0.1 260 / 0.1);
         --gradient-primary: linear-gradient(
             to bottom right,
@@ -296,26 +296,10 @@ utilities;
         color: var(--color-text);
         border: none;
         background: transparent;
-        z-index: 100;
-        top: 32%;
         
         &::backdrop {
             background: var(--color-overlay);
-            backdrop-filter: blur(2px);
-        }
-
-        @media (min-width: 640px) {
-            top: -30%;
-        }
-
-        &[open] {
-            display: flex;
-            flex-direction: column;
-        }
-
-        h2,
-        p {
-            margin-top: 0;
+            backdrop-filter: blur(6px);
         }
     }
 
