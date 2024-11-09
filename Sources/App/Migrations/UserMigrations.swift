@@ -6,10 +6,7 @@ struct CreateUser: Migration {
             .id()
             .field("name", .string, .required)
             .field("email", .string, .required)
-            .field("verified", .bool)
             .field("password", .string)
-            .field("reset_token", .string)
-            .field("reset_token_expires", .datetime)
             .unique(on: "email")
             .create()
     }

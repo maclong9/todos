@@ -1,6 +1,8 @@
 // swift-tools-version:6.0
 import PackageDescription
 
+// TODO: Fully rename project to `swift-todos`
+
 let package = Package(
     name: "todos-auth-fluent",
     platforms: [

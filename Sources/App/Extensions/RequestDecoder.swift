@@ -1,6 +1,8 @@
 import Foundation
 import Hummingbird
 
+// MARK: Figure out what this does
+
 /// Request body decoder
 struct TodosAuthRequestDecoder: RequestDecoder {
     func decode<T>(_ type: T.Type, from request: Request, context: some RequestContext) async throws -> T where T: Decodable {

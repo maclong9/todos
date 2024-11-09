@@ -10,6 +10,8 @@ struct DashboardView {
     }
     
     // TODO: Add popover on logout and settings buttons
+    // TODO: Add `edit` todo functionality by making them inputs that display a save icon when input is dirty
+    
     func header() -> String {
         """
         <header>

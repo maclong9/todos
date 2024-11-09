@@ -22,7 +22,7 @@ struct RedirectMiddleware<Context: AuthRequestContext>: RouterMiddleware {
 }
 
 /// Serves HTML pages
-struct WebController {
+struct ViewController {
     typealias Context = AppRequestContext
     let fluent: Fluent
     let sessionAuthenticator: SessionAuthenticator<Context, UserRepository>

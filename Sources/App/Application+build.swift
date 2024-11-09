@@ -65,7 +65,7 @@ func buildApplication(_ arguments: some AppArguments) async throws -> some Appli
     // add api routes
     TodoController(fluent: fluent, sessionAuthenticator: sessionAuthenticator).addRoutes(to: router.group("api/todos"))
     UserController(fluent: fluent, sessionAuthenticator: sessionAuthenticator).addRoutes(to: router.group("api/users"))
-    WebController(fluent: fluent, sessionAuthenticator: sessionAuthenticator).addRoutes(to: router)
+    ViewController(fluent: fluent, sessionAuthenticator: sessionAuthenticator).addRoutes(to: router)
     
     var app = Application(
         router: router,

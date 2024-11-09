@@ -12,6 +12,7 @@ utilities;
         --font-body: system-ui;
 
         /* Fluid Typography Scale */
+        --font-2xs: clamp(0.58rem, calc(0.55rem + 0.15vw), 0.67rem);
         --font-xs: clamp(0.69rem, calc(0.66rem + 0.18vw), 0.8rem);
         --font-sm: clamp(0.83rem, calc(0.78rem + 0.24vw), 0.96rem);
         --font-base: clamp(1rem, calc(0.94rem + 0.32vw), 1.15rem);
@@ -343,7 +344,7 @@ utilities;
         background: var(--color-text);
         border-radius: var(--radius-small);
         color: var(--color-base);
-        font-size: var(--font-xs);
+        font-size: var(--font-2xs);
         font-weight: 600;
         padding: 0.6rem 0.7rem;
         border: 0;

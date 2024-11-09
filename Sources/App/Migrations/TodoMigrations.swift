@@ -7,7 +7,6 @@ struct CreateTodo: AsyncMigration {
             .field("title", .string, .required)
             .field("owner_id", .uuid, .required, .references("user", "id"))
             .field("completed", .bool, .required)
-            .field("url", .string)
             .create()
     }
     
