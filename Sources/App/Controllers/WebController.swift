@@ -58,8 +58,10 @@ struct WebController {
     @Sendable func home(request: Request, context: Context) async throws -> HTML {
         HTML(
             title: "Home",
-            isLoggedIn: true,
-            content: HomeView().render()
+            isLoggedIn: request.cookies["SESSION_ID"] != nil,
+            content: HomeView(
+                isLoggedIn: request.cookies["SESSION_ID"] != nil
+            ).render()
         )
     }
     
@@ -183,7 +185,7 @@ struct WebController {
         
         return HTML(
             title: "Dashboard",
-            isLoggedIn: user.name.isEmpty == false,
+            isLoggedIn: request.cookies["SESSION_ID"] != nil,
             content: DashboardView(user: user, todos: todos).render()
         )
     }

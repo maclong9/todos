@@ -51,8 +51,8 @@ struct HomeView {
         <section>
             <div class="cta">
                 <h2 class="gradient-highlight">Get Started Now</h1>
-                <p>Sign up and get your life back on track! Stay organized, boost productivity, and achieve goals.</p>
-                \(ActionButtons().render())
+                <p>\(isLoggedIn ? "Thanks for signing up, keep track of your day to day goals on your dashboard or in the app" : "Sign up and get your life back on track! Stay organized, boost productivity, and achieve goals.")</p>
+                \(ActionButtons(isLoggedIn: isLoggedIn).render())
             </div>
         </section>
         """
