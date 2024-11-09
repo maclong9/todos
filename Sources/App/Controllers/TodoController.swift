@@ -41,41 +41,40 @@ struct TodoController {
         return try await context.user.$todos.get(on: self.fluent.db())
     }
     
+    /// Create new todo
     struct CreateTodoRequest: ResponseCodable {
         var title: String
     }
-    
-    /// Create new todo
     @Sendable func create(_ request: Request, context: TodoContext) async throws -> EditedResponse<Todo> {
         let todoRequest = try await request.decode(as: CreateTodoRequest.self, context: context)
-        guard let host = request.head.authority else { throw HTTPError(.badRequest, message: "No host header") }
         let todo = try Todo(title: todoRequest.title, ownerID: context.user.requireID(), completed: false)
+        
         let db = self.fluent.db()
         _ = try await todo.save(on: db)
-   
-        try await todo.update(on: db)
+        
         return .init(status: .created, response: todo)
     }
     
     /// Get todo
     @Sendable func get(_ request: Request, context: TodoContext) async throws -> Todo? {
         let id = try context.parameters.require("id", as: UUID.self)
+        
         return try await Todo.query(on: self.fluent.db())
             .filter(\.$id == id)
-            .with(\.$owner)
+            .with(\.$owner) // MARK: Where does $owner come from?
             .first()
     }
     
+    /// Edit todo
     struct EditTodoRequest: ResponseCodable {
         var title: String?
         var completed: Bool?
     }
-    
-    /// Edit todo
     @Sendable func update(_ request: Request, context: TodoContext) async throws -> Todo {
         let id = try context.parameters.require("id", as: UUID.self)
         let editTodo = try await request.decode(as: EditTodoRequest.self, context: context)
         let db = self.fluent.db()
+        
         guard let todo = try await Todo.query(on: db)
             .filter(\.$id == id)
             .with(\.$owner)
@@ -83,6 +82,7 @@ struct TodoController {
         else {
             throw HTTPError(.notFound)
         }
+        
         guard todo.owner.id == context.user.id else { throw HTTPError(.unauthorized) }
         todo.update(title: editTodo.title, completed: editTodo.completed)
         try await todo.update(on: db)
@@ -93,6 +93,7 @@ struct TodoController {
     @Sendable func deleteId(_ request: Request, context: TodoContext) async throws -> HTTPResponse.Status {
         let id = try context.parameters.require("id", as: UUID.self)
         let db = self.fluent.db()
+        
         guard let todo = try await Todo.query(on: db)
             .filter(\.$id == id)
             .with(\.$owner)
@@ -100,6 +101,7 @@ struct TodoController {
         else {
             throw HTTPError(.notFound)
         }
+        
         guard todo.owner.id == context.user.id else { throw HTTPError(.unauthorized) }
         try await todo.delete(on: db)
         return .ok
