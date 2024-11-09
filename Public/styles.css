@@ -11,6 +11,16 @@ utilities;
         --font-heading: system-ui;
         --font-body: system-ui;
 
+        /* Fluid Typography Scale */
+        --font-xs: clamp(0.69rem, calc(0.66rem + 0.18vw), 0.8rem);
+        --font-sm: clamp(0.83rem, calc(0.78rem + 0.24vw), 0.96rem);
+        --font-base: clamp(1rem, calc(0.94rem + 0.32vw), 1.15rem);
+        --font-lg: clamp(1.2rem, calc(1.12rem + 0.42vw), 1.38rem);
+        --font-xl: clamp(1.44rem, calc(1.34rem + 0.55vw), 1.66rem);
+        --font-2xl: clamp(1.73rem, calc(1.6rem + 0.73vw), 1.99rem);
+        --font-3xl: clamp(2.07rem, calc(1.91rem + 0.96vw), 2.38rem);
+        --font-4xl: clamp(2.49rem, calc(2.28rem + 1.27vw), 2.86rem);
+
         /* Colors */
         --color-primary: oklch(0.58 0.28 250);
         --color-secondary: oklch(0.57 0.27 220);
@@ -47,6 +57,7 @@ utilities;
 @layer base {
     html {
         font-family: var(--font-body);
+        font-size: var(--font-base);
         background: var(--color-base);
         color: var(--color-text);
         text-wrap: pretty;
@@ -81,11 +92,7 @@ utilities;
     h1 {
         margin-bottom: 0;
         line-height: 1.1;
-        font-size: 2.5rem;
-
-        @media (min-width: 640px) {
-            font-size: 3rem;
-        }
+        font-size: var(--font-4xl);
     }
 
     a {
@@ -157,7 +164,7 @@ utilities;
                 margin-bottom: 1rem;
 
                 h1 {
-                    font-size: 2rem;
+                    font-size: var(--font-3xl);
                     margin: 0;
                 }
             }
@@ -170,10 +177,10 @@ utilities;
                 align-items: center;
                 justify-content: space-between;
             }
-            
+
             @media (min-width: 640px) {
                 justify-content: center;
-                
+
                 main {
                     height: auto;
                     flex-direction: column;
@@ -235,13 +242,14 @@ utilities;
         display: grid;
         place-items: center;
         color: var(--color-subtle);
+        padding-bottom: 1.5rem;
     }
 }
 
 @layer components {
     /* Navigation Components */
     #logo {
-        font-size: 2rem;
+        font-size: var(--font-3xl);
         font-weight: 700;
     }
 
@@ -313,6 +321,10 @@ utilities;
         color: var(--color-text);
         border: none;
         background: transparent;
+        
+        &.small {
+            top: -250px;
+        }
 
         &::backdrop {
             background: var(--color-overlay);
@@ -326,10 +338,9 @@ utilities;
         background: var(--color-text);
         border-radius: var(--radius-small);
         color: var(--color-base);
-        font-size: 12px;
+        font-size: var(--font-xs);
         font-weight: 600;
         padding: 0.6rem 0.7rem;
-        transition: 0.3s ease-in-out;
         border: 0;
         cursor: pointer;
 
@@ -375,7 +386,7 @@ utilities;
         text-align: center;
 
         .icon {
-            font-size: 3rem;
+            font-size: var(--font-4xl);
             margin-bottom: 0.5rem;
         }
 
@@ -421,7 +432,7 @@ utilities;
         margin: 0 auto;
 
         h1 {
-            font-size: 2.5rem;
+            font-size: var(--font-3xl);
             margin: 1rem 0;
         }
 
@@ -431,13 +442,14 @@ utilities;
         }
 
         a {
-            font-size: 0.75rem;
+            font-size: var(--font-xs);
             color: var(--color-subtle);
         }
 
         @media (min-width: 640px) {
             width: 350px;
             position: static;
+            padding: 5rem;
         }
     }
 
@@ -447,7 +459,7 @@ utilities;
 
         label {
             display: block;
-            font-size: 0.75rem;
+            font-size: var(--font-xs);
             font-weight: 500;
             margin-bottom: 6px;
         }
@@ -461,7 +473,6 @@ utilities;
             background: var(--color-light);
             border: 1px solid var(--color-subtle);
             border-radius: 8px;
-            transition: all 0.5s ease;
             position: relative;
 
             @media (prefers-color-scheme: dark) {
@@ -471,10 +482,12 @@ utilities;
             &::placeholder {
                 color: #9ca3af;
                 font-weight: 600;
-                transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
                 position: relative;
                 top: 0;
                 opacity: 1;
+                transition:
+                    transform 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                    opacity 0.3s ease;
             }
 
             &:focus {
@@ -486,9 +499,6 @@ utilities;
                 &::placeholder {
                     transform: translateY(-150%);
                     opacity: 0;
-                    transition:
-                        transform 0.4s cubic-bezier(0.4, 0, 0.2, 1),
-                        opacity 0.3s ease;
                 }
             }
         }
@@ -498,6 +508,7 @@ utilities;
         }
     }
 
+    /* Add Todo Form */
     .todo-form {
         display: grid;
         place-items: center;
@@ -513,10 +524,10 @@ utilities;
             }
 
             .btn {
-                width: 48px;
+                width: 64px;
                 height: 100%;
                 border-radius: 0 8px 8px 0;
-                font-size: 1.3rem;
+                font-size: var(--font-xs);
             }
         }
     }
@@ -567,7 +578,7 @@ utilities;
                 top: 50%;
                 left: 50%;
                 transform: translate(-50%, -50%);
-                font-size: 12px;
+                font-size: var(--font-xs);
             }
 
             &:focus {
@@ -639,7 +650,41 @@ utilities;
         width: 100%;
         padding: 0.5rem;
         border-radius: var(--radius-small);
-        font-size: 12px;
+        font-size: var(--font-xs);
         font-weight: 600;
     }
+
+    /* Additional utility classes for font sizes */
+    .text-xs {
+        font-size: var(--font-xs);
+    }
+
+    .text-sm {
+        font-size: var(--font-sm);
+    }
+
+    .text-base {
+        font-size: var(--font-base);
+    }
+
+    .text-lg {
+        font-size: var(--font-lg);
+    }
+
+    .text-xl {
+        font-size: var(--font-xl);
+    }
+
+    .text-2xl {
+        font-size: var(--font-2xl);
+    }
+
+    .text-3xl {
+        font-size: var(--font-3xl);
+    }
+
+    .text-4xl {
+        font-size: var(--font-4xl);
+    }
 }
+

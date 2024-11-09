@@ -29,7 +29,7 @@ struct HomeView {
         <section class="grid gap three">
             <div class="feature">
                 <span class="icon">🎯</span>
-                <h2>Reach Your Goals Faster</h2>
+                <h2>Reach Goals Faster</h2>
                 <p>With quick, simple and easy task management.</p>
             </div>
             <div class="feature">
@@ -51,7 +51,8 @@ struct HomeView {
         <section>
             <div class="cta">
                 <h2 class="gradient-highlight">Get Started Now</h1>
-                <p>\(isLoggedIn ? "Thanks for signing up, keep track of your day to day goals on your dashboard or in the app" : "Sign up and get your life back on track! Stay organized, boost productivity, and achieve goals.")</p>
+                <p>\(isLoggedIn ? "Thanks for signing up, keep track of your day to day goals in your dashboard or the app"
+                                : "Sign up and get your life back on track! Stay organized, boost productivity, and achieve goals.")</p>
                 \(ActionButtons(isLoggedIn: isLoggedIn).render())
             </div>
         </section>

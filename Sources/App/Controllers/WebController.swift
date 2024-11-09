@@ -3,6 +3,8 @@ import Hummingbird
 import HummingbirdAuth
 import HummingbirdFluent
 
+// TODO: Add Reset Password and Email Confirmation Flows
+
 /// Redirects to login page if no user has been authenticated
 struct RedirectMiddleware<Context: AuthRequestContext>: RouterMiddleware {
     let to: String

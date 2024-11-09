@@ -21,7 +21,7 @@ struct DashboardView {
             <dialog id="settings">
                 \(AuthView(action: .updateProfile).render())
             </dialog>
-            <dialog id="deletion" class="surface">
+            <dialog id="deletion" class="surface small">
                 <h2>Are you sure?</h2>
                 <p>
                    This action is final and cannot be reversed. <br />
@@ -49,7 +49,7 @@ struct DashboardView {
                         placeholder="What do you want to achieve?"
                         required
                     >
-                    <input class="btn" type="submit" value="+" />
+                    <input class="btn" type="submit" value="➕" />
                 </div>
             </div>
         </form>      
@@ -63,7 +63,7 @@ struct DashboardView {
         
         let todoItems = todos.map { todo in
             """
-            <li class="todo-item \(todo.completed ? "completed" : "")" data-id="\(todo.id)">
+            <li class="todo-item \(todo.completed ? "completed" : "")" data-id="\(String(describing: todo.id))">
                 <input 
                     type="checkbox" 
                     class="todo-checkbox" 

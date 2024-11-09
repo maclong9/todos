@@ -1,10 +1,4 @@
-// Main dashboard container element @type {HTMLElement}
-const dashboard = document.querySelector('.dashboard');
-// Form element for creating new todos @type {HTMLFormElement}
-const todoForm = document.querySelector('.todo-form');
-// @type {HTMLElement}
 const main = document.querySelector('.dashboard main');
-
 
 /**
  * Handles user logout
@@ -31,7 +25,7 @@ async function logout() {
  * @param {Event} event - The form submission event
  * @returns {Promise<void>}
  */
-todoForm.addEventListener('submit', async (event) => {
+document.querySelector('.todo-form').addEventListener('submit', async (event) => {
     event.preventDefault();
     const titleInput = document.getElementById('title');
     const title = titleInput.value.trim();
@@ -60,7 +54,7 @@ todoForm.addEventListener('submit', async (event) => {
  * @param {Event} event - The click event
  * @returns {Promise<void>}
  */
-dashboard.addEventListener('click', async (event) => {
+document.querySelector('.dashboard').addEventListener('click', async (event) => {
     const target = event.target;
 
     if (target.matches('.todo-checkbox')) {
@@ -116,14 +110,23 @@ dashboard.addEventListener('click', async (event) => {
 async function updateTodoList() {
     try {
         const response = await fetch('/api/todos');
-        /** @type {Todo[]} */
         const todos = await response.json();
         
+        // Remove old todo list if it exists
+        const oldTodoList = main.querySelector('.todo-list');
+        if (oldTodoList) {
+            oldTodoList.remove();
+        }
+
+        // Remove old empty state message if it exists
+        const oldEmptyMessage = main.querySelector('p');
+        if (oldEmptyMessage) {
+            oldEmptyMessage.remove();
+        }
+        
         if (todos.length === 0) {
-            main.innerHTML = `
-                ${todoForm.outerHTML}
-                <p>You have nothing todo...</p>
-            `;
+            // Just add the empty message, don't touch the form
+            main.insertAdjacentHTML('beforeend', '<p>You have nothing todo...</p>');
             return;
         }
 
@@ -142,8 +145,7 @@ async function updateTodoList() {
             todoList.appendChild(li);
         });
 
-        main.innerHTML = '';
-        main.appendChild(todoForm);
+        // Append the new todo list after the form
         main.appendChild(todoList);
     } catch (error) {
         console.error('Failed to update todo list:', error);
@@ -159,6 +161,13 @@ function updateEmptyState() {
     if (todoList) {
         todoList.remove();
     }
+    
+    // Remove old empty message if it exists
+    const oldEmptyMessage = main.querySelector('p');
+    if (oldEmptyMessage) {
+        oldEmptyMessage.remove();
+    }
+    
     main.insertAdjacentHTML('beforeend', '<p>You have nothing todo...</p>');
 }
 
