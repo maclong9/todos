@@ -1,191 +1,234 @@
-const main = document.querySelector('.dashboard main');
+/**
+ * @fileoverview Dashboard management system for Todo application
+ * @description Handles todo creation, updates, deletion, and user management
+ * @author [Your Name]
+ * @version 1.0.0
+ *
+ * @typedef {Object} Todo
+ * @property {string} id - Unique identifier for the todo
+ * @property {string} title - The todo item's text content
+ * @property {boolean} completed - Whether the todo is completed
+ * @property {{id: string}} owner - The owner of the todo item
+ */
 
 /**
- * Handles user logout
- * @returns {Promise<void>}
- * @throws {Error} When the logout request fails
+ * Class representing a Todo Dashboard application
+ * @class
+ * @description Manages the Todo application's UI and server interactions
  */
-async function logout() {
-    try {
-        const response = await fetch('/api/users/logout', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' }
-        });
-        
-        if (response.ok) {
-            window.location.href = '/';
-        }
-    } catch (error) {
-        console.error('Failed to logout:', error);
+class TodoDashboard {
+    /**
+     * Create a new TodoDashboard instance
+     * Initializes DOM references and sets up event listeners
+     * @constructor
+     */
+    constructor() {
+        // Cache frequently used DOM elements
+        this.main = document.querySelector(".dashboard main");
+        this.form = document.querySelector(".todo-form");
+        this.titleInput = document.getElementById("title");
+
+        this.initializeEventListeners();
+        this.loadTodos();
     }
-}
 
-/**
- * Handles the submission of new todo items
- * @param {Event} event - The form submission event
- * @returns {Promise<void>}
- */
-document.querySelector('.todo-form').addEventListener('submit', async (event) => {
-    event.preventDefault();
-    const titleInput = document.getElementById('title');
-    const title = titleInput.value.trim();
-    
-    if (!title) return;
-    
-    try {
-        const response = await fetch('/api/todos', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ title })
-        });
+    /**
+     * Initialize event listeners for the dashboard
+     * @private
+     * @returns {void}
+     */
+    initializeEventListeners() {
+        // Handle form submissions for new todos
+        this.form.addEventListener("submit", (e) => this.handleSubmit(e));
 
-        if (!response.ok) throw new Error('Failed to add todo');
-
-        const todo = await response.json();
-        updateTodoList();
-        titleInput.value = '';
-    } catch (error) {
-        console.error('Failed to add todo:', error);
+        // Use event delegation for todo item interactions
+        document
+            .querySelector(".dashboard")
+            .addEventListener("click", (e) => this.handleDashboardClick(e));
     }
-});
 
-/**
- * Handles click events within the dashboard using event delegation
- * @param {Event} event - The click event
- * @returns {Promise<void>}
- */
-document.querySelector('.dashboard').addEventListener('click', async (event) => {
-    const target = event.target;
-
-    if (target.matches('.todo-checkbox')) {
-        event.preventDefault();
-        const todoItem = target.closest('.todo-item');
-        if (!todoItem) return;
-
-        const todoId = todoItem.dataset.id;
-        const checked = target.checked;
-
+    /**
+     * Load todos from the server and render them
+     * @async
+     * @returns {Promise<void>}
+     */
+    async loadTodos() {
         try {
-            await fetch(`/api/todos/${todoId}`, {
-                method: 'PATCH',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ completed: checked })
-            });
-            
-            target.checked = checked;
-            todoItem.classList.toggle('completed', checked);
+            const response = await fetch("/api/todos");
+            const todos = await response.json();
+            this.renderTodos(todos);
         } catch (error) {
-            console.error('Failed to update todo:', error);
-            target.checked = !checked;
+            console.error("Failed to load todos:", error);
         }
     }
 
-    if (target.matches('.delete-todo')) {
+    /**
+     * Render the todo list or empty state message
+     * @param {Todo[]} todos - Array of todo items to render
+     * @returns {void}
+     */
+    renderTodos(todos) {
+        // Show empty state message if no todos, otherwise render todo list
+        this.main.querySelector(".todo-list").innerHTML = todos.length
+            ? this.createTodoList(todos)
+            : "<p>You have nothing todo...</p>";
+    }
+
+    /**
+     * Generate HTML for the todo list
+     * @param {Todo[]} todos - Array of todo items
+     * @returns {string} HTML string representing the todo list
+     * @private
+     */
+    createTodoList(todos) {
+        return `
+            <ul class="todo-list">
+                ${todos
+                    .map(
+                        (todo) => `
+                            <li class="todo-item ${todo.completed ? "completed" : ""}" data-id="${todo.id}">
+                                <input type="checkbox" class="todo-checkbox" ${todo.completed ? "checked" : ""}>
+                                <span class="todo-title">${this.escapeHtml(todo.title)}</span>
+                                <button class="delete-todo unstyle" aria-label="delete todo">🗑️</button>
+                            </li>
+                        `,
+                    )
+                    .join("")}
+            </ul>
+        `;
+    }
+
+    /**
+     * Handle form submission for new todos
+     * @param {Event} event - The form submission event
+     * @async
+     * @returns {Promise<void>}
+     * @private
+     */
+    async handleSubmit(event) {
         event.preventDefault();
-        const todoItem = target.closest('.todo-item');
+        const title = this.titleInput.value.trim();
+        if (!title) return;
+
+        try {
+            const response = await fetch("/api/todos", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ title }),
+            });
+
+            if (!response.ok) throw new Error("Failed to add todo");
+            this.titleInput.value = ""; // Clear input on success
+            await this.loadTodos(); // Refresh the todo list
+        } catch (error) {
+            console.error("Failed to add todo:", error);
+        }
+    }
+
+    /**
+     * Handle click events within the dashboard
+     * @param {Event} event - The click event
+     * @async
+     * @returns {Promise<void>}
+     * @private
+     */
+    async handleDashboardClick(event) {
+        const target = event.target;
+        const todoItem = target.closest(".todo-item");
         if (!todoItem) return;
 
         const todoId = todoItem.dataset.id;
-        
+
+        // Delegate to appropriate handler based on clicked element
+        if (target.matches(".todo-checkbox")) {
+            await this.toggleTodoStatus(todoItem, target);
+        } else if (target.matches(".delete-todo")) {
+            await this.deleteTodo(todoId);
+        }
+    }
+
+    /**
+     * Toggle the completed status of a todo item
+     * @param {HTMLElement} todoItem - The todo item element
+     * @param {HTMLInputElement} checkbox - The checkbox element
+     * @async
+     * @returns {Promise<void>}
+     * @private
+     */
+    async toggleTodoStatus(todoItem, checkbox) {
+        const checked = checkbox.checked;
         try {
-            await fetch(`/api/todos/${todoId}`, {
-                method: 'DELETE',
-                headers: { 'Content-Type': 'application/json' }
+            const response = await fetch(`/api/todos/${todoItem.dataset.id}`, {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ completed: checked }),
             });
-            
-            todoItem.remove();
-            if (main.querySelectorAll('.todo-item').length === 0) {
-                updateEmptyState();
+
+            if (!response.ok) throw new Error("Failed to update todo");
+            todoItem.classList.toggle("completed", checked);
+        } catch (error) {
+            console.error("Failed to update todo:", error);
+            checkbox.checked = !checked; // Revert checkbox state on error
+        }
+    }
+
+    /**
+     * Delete a todo item
+     * @param {string} todoId - ID of the todo to delete
+     * @async
+     * @returns {Promise<void>}
+     * @private
+     */
+    async deleteTodo(todoId) {
+        try {
+            const response = await fetch(`/api/todos/${todoId}`, {
+                method: "DELETE",
+                headers: { "Content-Type": "application/json" },
+            });
+
+            if (!response.ok) throw new Error("Failed to delete todo");
+            await this.loadTodos(); // Refresh the todo list
+        } catch (error) {
+            console.error("Failed to delete todo:", error);
+        }
+    }
+
+    /**
+     * Escape HTML special characters to prevent XSS attacks
+     * @param {string} unsafe - String containing potentially unsafe HTML
+     * @returns {string} Escaped safe HTML string
+     * @private
+     */
+    escapeHtml(unsafe) {
+        return unsafe
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+    }
+
+    /**
+     * Log out the current user
+     * @static
+     * @async
+     * @returns {Promise<void>}
+     */
+    static async logout() {
+        try {
+            const response = await fetch("/api/users/logout", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+            });
+
+            if (response.ok) {
+                window.location.href = "/";
             }
         } catch (error) {
-            console.error('Failed to delete todo:', error);
+            console.error("Failed to logout:", error);
         }
-    }
-});
-
-/**
- * Updates the todo list UI with current todos from the server
- * @returns {Promise<void>}
- */
-async function updateTodoList() {
-    try {
-        const response = await fetch('/api/todos');
-        const todos = await response.json();
-        
-        // Remove old todo list if it exists
-        const oldTodoList = main.querySelector('.todo-list');
-        if (oldTodoList) {
-            oldTodoList.remove();
-        }
-
-        // Remove old empty state message if it exists
-        const oldEmptyMessage = main.querySelector('p');
-        if (oldEmptyMessage) {
-            oldEmptyMessage.remove();
-        }
-        
-        if (todos.length === 0) {
-            // Just add the empty message, don't touch the form
-            main.insertAdjacentHTML('beforeend', '<p>You have nothing todo...</p>');
-            return;
-        }
-
-        const todoList = document.createElement('ul');
-        todoList.className = 'todo-list';
-        
-        todos.forEach(todo => {
-            const li = document.createElement('li');
-            li.className = `todo-item ${todo.completed ? 'completed' : ''}`;
-            li.dataset.id = todo.id;
-            li.innerHTML = `
-                <input type="checkbox" class="todo-checkbox" ${todo.completed ? 'checked' : ''}>
-                <span class="todo-title">${escapeHtml(todo.title)}</span>
-                <button class="delete-todo unstyle" aria-label="delete todo">🗑️</button>
-            `;
-            todoList.appendChild(li);
-        });
-
-        // Append the new todo list after the form
-        main.appendChild(todoList);
-    } catch (error) {
-        console.error('Failed to update todo list:', error);
     }
 }
 
-/**
- * Updates the UI to show empty state when no todos exist
- * @returns {void}
- */
-function updateEmptyState() {
-    const todoList = main.querySelector('.todo-list');
-    if (todoList) {
-        todoList.remove();
-    }
-    
-    // Remove old empty message if it exists
-    const oldEmptyMessage = main.querySelector('p');
-    if (oldEmptyMessage) {
-        oldEmptyMessage.remove();
-    }
-    
-    main.insertAdjacentHTML('beforeend', '<p>You have nothing todo...</p>');
-}
-
-/**
- * Escapes HTML special characters to prevent XSS attacks
- * @param {string} unsafe - The string containing potentially unsafe HTML
- * @returns {string} The escaped safe HTML string
- */
-function escapeHtml(unsafe) {
-    return unsafe
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
-}
-
-// Initial load
-document.addEventListener('DOMContentLoaded', () => {
-    updateTodoList();
-});
+// Initialize the dashboard when the DOM is fully loaded
+document.addEventListener("DOMContentLoaded", () => new TodoDashboard());
