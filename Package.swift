@@ -4,7 +4,7 @@ import PackageDescription
 // TODO: Fully rename project to `swift-todos`
 
 let package = Package(
-  name: "todos-auth-fluent",
+  name: "swift-todos",
   platforms: [
     .macOS(.v14)
   ],
