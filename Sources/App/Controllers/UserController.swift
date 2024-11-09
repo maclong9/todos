@@ -38,14 +38,14 @@ struct UserController {
     }
     
     /// Login user and create session
-    /// Used in tests, as user creation is done by ``WebController.loginDetails``
+    /// Used in tests, as user login is done by ``WebController.loginDetails``
     @Sendable func login(_ request: Request, context: Context) async throws -> HTTPResponse.Status {
         guard let user = context.identity else { throw HTTPError(.unauthorized) }
         try context.sessions.setSession(user.requireID())
         return .ok
     }
     
-    /// Login user and create session
+    /// Logout user
     @Sendable func logout(_ request: Request, context: Context) async throws -> HTTPResponse.Status {
         context.sessions.clearSession()
         return .ok
