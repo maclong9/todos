@@ -9,11 +9,15 @@ struct DashboardView {
         self.error = error
     }
     
+    // TODO: Add popover on logout and settings buttons
     func header() -> String {
         """
         <header>
             <h1>Welcome Back, \(user.name)</h1>
-            <button class="unstyle" onclick="settings.showModal()">⚙️</button>
+            <div class="btn-group">
+                <button class="unstyle" onclick="settings.showModal()">⚙️</button>
+                <button class="unstyle" onclick="logout()" aria-label="logout">🚪</button>
+            </div>
             <dialog id="settings">
                 \(AuthView(action: .updateProfile).render())
             </dialog>
@@ -34,7 +38,7 @@ struct DashboardView {
     
     func form() -> String {
         """
-        <form class="todo-form" action="/api/todos" method="post">
+        <form class="todo-form">
             <div class="form-group">
                 <label for="title">Add a Todo</label>
                 <div class="inputs">
@@ -48,25 +52,50 @@ struct DashboardView {
                     <input class="btn" type="submit" value="+" />
                 </div>
             </div>
-        </form>        
+        </form>      
         """
     }
     
     func list() -> String {
-        """
-            <p>No todo items yet...</p>
+        if todos.isEmpty {
+            return "<p>You have nothing todo...</p>"
+        }
+        
+        let todoItems = todos.map { todo in
+            """
+            <li class="todo-item \(todo.completed ? "completed" : "")" data-id="\(todo.id)">
+                <input 
+                    type="checkbox" 
+                    class="todo-checkbox" 
+                    \(todo.completed ? "checked" : "")
+                    aria-label="Mark '\(todo.title)' as \(todo.completed ? "incomplete" : "complete")"
+                >
+                <span class="todo-title">\(todo.title)</span>
+                <button class="delete-todo unstyle" aria-label="delete todo">🗑️</button>
+            </li>
+            """
+        }.joined(separator: "\n")
+        
+        return """
+        <ul class="todo-list">
+            \(todoItems)
+        </ul>
         """
     }
     
     func render() -> String {
-        """
+        let errorMessage = error.map { "<div class='error'>\($0)</div>" } ?? ""
+        
+        return """
         <section class="dashboard">
             \(header())
             <main>
+                \(errorMessage)
                 \(form())
                 \(list())
             </main>
         </section>
+        <script src="dashboard.js"></script>
         """
     }
 }

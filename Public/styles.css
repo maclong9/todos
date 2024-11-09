@@ -26,7 +26,7 @@ utilities;
         --color-warning: oklch(0.74 0.22 80);
         --color-error: oklch(0.66 0.26 20);
         --color-info: oklch(0.62 0.24 250);
-        
+
         /* Radius */
         --radius-small: 8px;
         --radius-medium: 12px;
@@ -145,23 +145,40 @@ utilities;
         padding: 3rem 0;
 
         &.dashboard {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
             padding: 0 1rem;
             max-width: 768px;
             margin: 0 auto;
-            
+
             header {
                 padding: 1rem 0;
                 margin-bottom: 1rem;
-                
+
                 h1 {
+                    font-size: 2rem;
                     margin: 0;
                 }
             }
-            
+
             main {
+                min-height: calc(100vh - (98px + 16px) - (88px + 16px));
+                height: 100%;
                 display: flex;
-                flex-direction: column;
+                flex-direction: column-reverse;
                 align-items: center;
+                justify-content: space-between;
+            }
+            
+            @media (min-width: 640px) {
+                justify-content: center;
+                
+                main {
+                    height: auto;
+                    flex-direction: column;
+                    justify-content: flex-start;
+                }
             }
         }
     }
@@ -175,7 +192,7 @@ utilities;
         &.gap {
             gap: 3rem;
         }
-        
+
         .text {
             display: flex;
             flex-direction: column;
@@ -199,7 +216,7 @@ utilities;
             &.three {
                 grid-template-columns: repeat(3, 1fr);
             }
-            
+
             .text {
                 margin: 0;
                 order: 1;
@@ -232,7 +249,7 @@ utilities;
         background: var(--color-surface);
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
         border: 0;
-        border-radius: var(--radi);
+        border-radius: var(--radius-medium);
         min-width: 100px;
         padding: 1rem;
         z-index: 50;
@@ -296,7 +313,7 @@ utilities;
         color: var(--color-text);
         border: none;
         background: transparent;
-        
+
         &::backdrop {
             background: var(--color-overlay);
             backdrop-filter: blur(6px);
@@ -501,6 +518,104 @@ utilities;
                 border-radius: 0 8px 8px 0;
                 font-size: 1.3rem;
             }
+        }
+    }
+
+    /* Todo List Component */
+    .todo-list {
+        width: 90%;
+        list-style: none;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    /* Todo Item Component */
+    .todo-item {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.75rem 1rem;
+        background: var(--color-surface);
+        border-radius: var(--radius-small);
+        transition: all 0.3s ease;
+        width: 100%;
+        max-width: 768px;
+
+        /* Checkbox styling */
+        .todo-checkbox {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--color-subtle);
+            border-radius: var(--radius-small);
+            cursor: pointer;
+            appearance: none;
+            position: relative;
+            transition: all 0.3s ease;
+
+            &:checked {
+                background: var(--color-success);
+                border-color: var(--color-success);
+            }
+
+            &:checked::after {
+                content: "✓";
+                color: var(--color-light);
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                font-size: 12px;
+            }
+
+            &:focus {
+                outline: 2px solid var(--color-info);
+                outline-offset: 2px;
+            }
+        }
+
+        /* Todo title styling */
+        .todo-title {
+            flex-grow: 1;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        /* Delete button styling */
+        .delete-todo {
+            opacity: 0;
+            transform: translateX(10px);
+            transition: all 0.3s ease;
+        }
+
+        /* Hover state */
+        &:hover {
+            .delete-todo {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Completed state */
+        &.completed {
+            background: color-mix(
+                in srgb,
+                var(--color-surface) 97%,
+                var(--color-success)
+            );
+
+            .todo-title {
+                text-decoration: line-through;
+                color: var(--color-subtle);
+            }
+        }
+
+        /* Focus state for keyboard navigation */
+        &:focus-within {
+            outline: 2px solid var(--color-info);
+            outline-offset: 2px;
         }
     }
 }

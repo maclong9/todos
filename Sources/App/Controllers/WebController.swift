@@ -34,18 +34,18 @@ struct WebController {
     func addRoutes(to router: Router<Context>) {
         // Unauthenticated routes
         router.group()
+            .get("/", use: self.home)
             .get("/log-in", use: self.login)
             .post("/log-in", use: self.loginDetails)
             .get("/sign-up", use: self.signup)
             .post("/sign-up", use: self.signupDetails)
             .get("/reset-password", use: self.reset)
             .post("/reset-password", use: self.resetDetails)
-            .get("/", use: self.home)
         
         // Authenticated routes
         router.group()
             .add(middleware: self.sessionAuthenticator)
-            .add(middleware: RedirectMiddleware(to: "/login"))
+            .add(middleware: RedirectMiddleware(to: "/log-in"))
             .get("/dashboard", use: self.dashboard)
     }
     
@@ -56,7 +56,9 @@ struct WebController {
     
     /// Home page for marketing content
     @Sendable func home(request: Request, context: Context) async throws -> HTML {
-       return HTML(
+        let user = try context.requireIdentity()
+        
+        return HTML(
             title: "Home",
             isLoggedIn: true,
             content: HomeView().render()
@@ -120,7 +122,6 @@ struct WebController {
     /// Login POST page
     @Sendable func loginDetails(request: Request, context: Context) async throws -> Response {
         let details = try await request.decode(as: LoginDetails.self, context: context)
-        print("Login attempt for:", details.email)
         
         do {
             // check if user exists in the database and then verify the entered password
