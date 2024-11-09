@@ -13,24 +13,31 @@ public protocol AppArguments {
 }
 
 func buildApplication(_ arguments: some AppArguments) async throws -> some ApplicationProtocol {
-    let logger = Logger(label: "todos-auth-fluent")
+    let logger = Logger(label: "swift-todos")
     let fluent = Fluent(logger: logger)
+    
     // add sqlite database
     if arguments.inMemoryDatabase {
         fluent.databases.use(.sqlite(.memory), as: .sqlite)
     } else {
         fluent.databases.use(.sqlite(.file("db.sqlite")), as: .sqlite)
     }
+    
     // add migrations
     await fluent.migrations.add(CreateUser())
     await fluent.migrations.add(CreateTodo())
     
     let fluentPersist = await FluentPersistDriver(fluent: fluent)
+    
     // migrate
     if arguments.migrate || arguments.inMemoryDatabase {
         try await fluent.migrate()
     }
     let userRepository = UserRepository(fluent: fluent)
+    
+    // ensure working directory is correct
+    assert(FileManager.default.fileExists(atPath: "Public/styles.css"), "Set your working directory to the root folder of this example to get it to work")
+    
     // router
     let router = Router(context: AppRequestContext.self)
     
@@ -46,19 +53,18 @@ func buildApplication(_ arguments: some AppArguments) async throws -> some Appli
         )
         SessionMiddleware(storage: fluentPersist)
     }
+    
     // add health check route
     router.get("/health") { _, _ in
         return HTTPResponse.Status.ok
     }
     
-    assert(FileManager.default.fileExists(atPath: "Public/styles.css"), "Set your working directory to the root folder of this example to get it to work")
-    
+    // add authenticator
     let sessionAuthenticator = SessionAuthenticator(users: userRepository, context: AppRequestContext.self)
-    // Add api routes managing todos
+    
+    // add api routes
     TodoController(fluent: fluent, sessionAuthenticator: sessionAuthenticator).addRoutes(to: router.group("api/todos"))
-    // Add api routes managing users
     UserController(fluent: fluent, sessionAuthenticator: sessionAuthenticator).addRoutes(to: router.group("api/users"))
-    // Add web view routes
     WebController(fluent: fluent, sessionAuthenticator: sessionAuthenticator).addRoutes(to: router)
     
     var app = Application(
