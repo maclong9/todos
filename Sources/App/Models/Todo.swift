@@ -14,19 +14,15 @@ final class Todo: @unchecked Sendable, Model, ResponseCodable {
     
     @Parent(key: "owner_id")
     var owner: User
-    
-    @Field(key: "url")
-    var url: String?
-    
+        
     @Field(key: "completed")
     var completed: Bool
     
     init() {}
     
-    init(id: UUID? = nil, title: String, ownerID: User.IDValue, url: String? = nil, completed: Bool = false) {
+    init(id: UUID? = nil, title: String, ownerID: User.IDValue, completed: Bool = false) {
         self.id = id
         self.title = title
-        self.url = url
         self.completed = completed
         self.$owner.id = ownerID
     }

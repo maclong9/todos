@@ -49,11 +49,9 @@ struct TodoController {
     @Sendable func create(_ request: Request, context: TodoContext) async throws -> EditedResponse<Todo> {
         let todoRequest = try await request.decode(as: CreateTodoRequest.self, context: context)
         guard let host = request.head.authority else { throw HTTPError(.badRequest, message: "No host header") }
-        let todo = try Todo(title: todoRequest.title, ownerID: context.user.requireID())
+        let todo = try Todo(title: todoRequest.title, ownerID: context.user.requireID(), completed: false)
         let db = self.fluent.db()
         _ = try await todo.save(on: db)
-        todo.completed = false
-        todo.url = "http://\(host)/api/todos/\(todo.id!)"
    
         try await todo.update(on: db)
         return .init(status: .created, response: todo)
