@@ -56,9 +56,7 @@ struct WebController {
     
     /// Home page for marketing content
     @Sendable func home(request: Request, context: Context) async throws -> HTML {
-        let user = try context.requireIdentity()
-        
-        return HTML(
+        HTML(
             title: "Home",
             isLoggedIn: true,
             content: HomeView().render()
