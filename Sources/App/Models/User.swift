@@ -17,11 +17,20 @@ final class User: Model, PasswordAuthenticatable, @unchecked Sendable {
     @Field(key: "email")
     var email: String
     
+    @Field(key: "verified")
+    var verified: Bool
+    
     @Field(key: "name")
     var name: String
     
     @Field(key: "password")
     var passwordHash: String?
+    
+    @Field(key: "reset_token")
+    var resetToken: String?
+    
+    @Field(key: "reset_expires")
+    var resetExpires: Date?
     
     @Children(for: \.$owner)
     var todos: [Todo]
@@ -32,6 +41,7 @@ final class User: Model, PasswordAuthenticatable, @unchecked Sendable {
         self.id = id
         self.name = name
         self.email = email
+        self.verified = false
         self.passwordHash = passwordHash
     }
 }
