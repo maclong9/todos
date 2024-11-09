@@ -7,7 +7,7 @@ struct HomeView {
     
     func heroSection() -> String {
         """
-        <section class="grid">
+        <section class="grid hero">
           <div class="text">
             <h1>
               Take Control of
@@ -26,6 +26,7 @@ struct HomeView {
     
     func featureList() -> String {
         """
+        <h2 class="text-xl">Features</h2>
         <section class="grid gap three">
             <div class="feature">
                 <span class="icon">🎯</span>

@@ -149,7 +149,12 @@ utilities;
 
     section {
         max-width: 1024px;
-        padding: 3rem 0;
+        padding: 1.25rem 0 3rem;
+        
+        &.hero {
+            height: 70vh;
+            padding-top: 1.25rem;
+        }
 
         &.dashboard {
             display: flex;
