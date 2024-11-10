@@ -3,7 +3,7 @@
 ## Write Documentation Here About
 
 - [ ] MVC architecture
-- [ ] Databases, Migrations & Repositries 
+- [ ] Databases, Migrations & Repositries
 - [ ] HTTP Requests, Repsonses and Context
 - [ ] Templating Using Swift and the `HTML` Extension
 - [ ] Running a Server `App` and `Application+build`
