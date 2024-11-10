@@ -60,16 +60,16 @@ struct TodoController {
     let sessionAuthenticator: SessionAuthenticator<AppRequestContext, UserRepository>
 
     /// Adds todo-related routes to the specified router group
-     ///
-     /// This method configures the following RESTful endpoints:
-     /// - GET /: List all todos
-     /// - GET /:id: Get a specific todo
-     /// - POST /: Create a new todo
-     /// - PATCH /:id: Update an existing todo
-     /// - DELETE /:id: Delete a todo
-     ///
-     /// - Parameter group: The router group to add routes to
-     /// - Note: All routes will be protected by session authentication
+    ///
+    /// This method configures the following RESTful endpoints:
+    /// - GET /: List all todos
+    /// - GET /:id: Get a specific todo
+    /// - POST /: Create a new todo
+    /// - PATCH /:id: Update an existing todo
+    /// - DELETE /:id: Delete a todo
+    ///
+    /// - Parameter group: The router group to add routes to
+    /// - Note: All routes will be protected by session authentication
     func addRoutes(to group: RouterGroup<AppRequestContext>) {
         group
             .add(middleware: self.sessionAuthenticator)
@@ -114,7 +114,7 @@ struct TodoController {
     struct CreateTodoRequest: ResponseCodable {
         var title: String
     }
-    
+
     /// Create a new todo for the current user
     ///
     /// - parameters:
@@ -145,7 +145,7 @@ struct TodoController {
         var title: String?
         var completed: Bool?
     }
-    
+
     /// Update an existing todo for the current user
     ///
     /// This type defines the optional fields that can be updated on a todo.

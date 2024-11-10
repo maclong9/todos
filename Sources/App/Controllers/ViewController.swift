@@ -18,7 +18,7 @@ import HummingbirdFluent
 struct RedirectMiddleware<Context: AuthRequestContext>: RouterMiddleware {
     // path to redirect unauthenticated users to
     let to: String
-    
+
     /// Handles the incoming request
     ///
     /// - Parameters:
@@ -98,14 +98,14 @@ struct ViewController {
     }
 
     /// Renders the home page
-     ///
-     /// This page displays marketing content and varies based on whether
-     /// the user is authenticated.
-     ///
-     /// - Parameters:
-     ///   - request: The incoming HTTP request
-     ///   - context: The application context
-     /// - Returns: The rendered HTML page
+    ///
+    /// This page displays marketing content and varies based on whether
+    /// the user is authenticated.
+    ///
+    /// - Parameters:
+    ///   - request: The incoming HTTP request
+    ///   - context: The application context
+    /// - Returns: The rendered HTML page
     @Sendable func home(request: Request, context: Context) async throws -> HTML {
         HTML(
             title: "Home",
@@ -136,7 +136,7 @@ struct ViewController {
         let password: String
         let confirmPassword: String
     }
-    
+
     /// Signup POST page
     @Sendable func signupDetails(request: Request, context: Context) async throws -> Response {
         let details = try await request.decode(as: SignupDetails.self, context: context)
@@ -188,7 +188,7 @@ struct ViewController {
         let email: String
         let password: String
     }
-    
+
     /// Login POST page
     @Sendable func loginDetails(request: Request, context: Context) async throws -> Response {
         let details = try await request.decode(as: LoginDetails.self, context: context)
