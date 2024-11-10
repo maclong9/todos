@@ -1,5 +1,20 @@
 import Foundation
 
+/**
+ The main layout wrapper for all pages in the application.
+ 
+ Provides consistent HTML structure including:
+ - Meta tags and SEO optimization
+ - Navigation header with authentication buttons
+ - Content area for page-specific views
+ - Footer with copyright information
+ 
+ - Parameters:
+    - title: Page title for the browser tab
+    - description: Meta description for SEO
+    - isLoggedIn: Authentication state for navigation options
+    - content: The main page content to be rendered
+ */
 struct LayoutView {
   let title: String
   let description: String

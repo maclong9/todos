@@ -1,4 +1,17 @@
-/// dashboard view for main application workflow
+/**
+ A view that displays the main application interface for authenticated users.
+ 
+ Renders a personalized dashboard containing:
+ - User welcome message and settings
+ - Todo creation form
+ - Interactive list of user's todos
+ - Account management options
+ 
+ - Parameters:
+    - user: The currently authenticated user
+    - todos: Array of user's todo items
+    - error: Optional error message to display
+ */
 struct DashboardView {
   let user: User
   let todos: [Todo]
