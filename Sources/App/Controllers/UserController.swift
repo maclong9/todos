@@ -36,12 +36,6 @@ struct UserController {
 
     /// Adds authentication and user-related routes to the specified router group
     ///
-    /// This method configures the following endpoints:
-    /// - POST /: Create a new user
-    /// - POST /login: Log in with basic authentication
-    /// - GET /: Get currently logged in user (requires session auth)
-    /// - POST /logout: Log out current user (requires session auth)
-    ///
     /// - Parameter group: The router group to add routes to
     /// - Note: The login route is protected by basic authentication
     /// - Note: The current user and logout routes are protected by session authentication
