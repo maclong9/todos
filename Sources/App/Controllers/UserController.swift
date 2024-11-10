@@ -25,12 +25,26 @@ import NIO
 /// - ``login(_:context:)``
 /// - ``logout(_:context:)``
 /// - ``current(_:context:)``
+///
+/// ### Related Types
+///  - ``User``
+///  - ``AppRequestContext``
 struct UserController {
     typealias Context = AppRequestContext
     let fluent: Fluent
     let sessionAuthenticator: SessionAuthenticator<Context, UserRepository>
 
-    /// Add routes for user controller
+    /// Adds authentication and user-related routes to the specified router group
+    ///
+    /// This method configures the following endpoints:
+    /// - POST /: Create a new user
+    /// - POST /login: Log in with basic authentication
+    /// - GET /: Get currently logged in user (requires session auth)
+    /// - POST /logout: Log out current user (requires session auth)
+    ///
+    /// - Parameter group: The router group to add routes to
+    /// - Note: The login route is protected by basic authentication
+    /// - Note: The current user and logout routes are protected by session authentication
     func addRoutes(to group: RouterGroup<Context>) {
         group.post(use: self.create)
         group.group("login")
@@ -43,8 +57,8 @@ struct UserController {
 
     /// Creates a new user account
     ///
-    /// This endpoint is primarily used in tests, as user creation is typically handled
-    /// by the web interface through ``ViewController.signupDetails``.
+    /// This endpoint is primarily used in tests,
+    /// as user creation is typically handled ``ViewController/signupDetails(request:context:)``
     ///
     /// - Parameters:
     ///   - request: The incoming HTTP request
@@ -69,7 +83,7 @@ struct UserController {
     /// Authenticates a user and creates a new session
     ///
     /// This endpoint is primarily used in tests, as user creation is typically handled
-    /// by the web interface through ``ViewController.signupDetails``.
+    /// by the web interface through ``ViewController/loginDetails(request:context:)``.
     ///
     /// - Parameters:
     ///   - request: The incoming HTTP request
@@ -82,14 +96,26 @@ struct UserController {
         return .ok
     }
 
-    /// Logout user
+    /// Ends the current users session
+    ///
+    /// - Parameters:
+    ///   - request: The incoming HTTP request
+    ///   - context: The application context
+    /// - Returns: An HTTP status indicating success
+    /// - Throws: Errors from the session clearing operation
     @Sendable func logout(_ request: Request, context: Context) async throws -> HTTPResponse.Status
     {
         context.sessions.clearSession()
         return .ok
     }
 
-    /// Get current logged in user
+    /// Ends the current users session
+    ///
+    /// - Parameters:
+    ///   - request: The incoming HTTP request
+    ///   - context: The application context
+    /// - Returns: The currently authenticated `User`
+    /// - Throws: An unauthorized error if user is not signed in
     @Sendable func current(_ request: Request, context: Context) throws -> UserResponse {
         let user = try context.requireIdentity()
         return UserResponse(from: user)
