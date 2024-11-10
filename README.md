@@ -12,7 +12,6 @@
 - [ ] Testing Your Application `Tests`
 - [ ] Deploying This Application
 
-
 ## TodoController
 
 ### Example Usage
