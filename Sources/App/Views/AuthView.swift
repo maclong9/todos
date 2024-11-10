@@ -15,13 +15,16 @@ enum AuthAction: String {
 /// - Parameters:
 ///    - action: The type of authentication form to display
 ///    - errorMessage: Optional error message to show above the form
+///    - user: Optional `User` to pre-populate form fields
 struct AuthView {
   let action: AuthAction
   let errorMessage: String
+  let user: User?
 
-  init(action: AuthAction, errorMessage: String = "") {
+  init(action: AuthAction, errorMessage: String = "", user: User? = nil) {
     self.action = action
     self.errorMessage = errorMessage
+    self.user = user
   }
 
   public var signupInputs: String {
@@ -31,7 +34,8 @@ struct AuthView {
         <input 
             type="text" 
             id="name" 
-            name="name" 
+            name="name"
+            value="\(user?.name ?? "")"
             placeholder="Enter your full name"
             autocomplete="name"
             required
@@ -43,6 +47,7 @@ struct AuthView {
             type="email" 
             id="email" 
             name="email"
+            value="\(user?.email ?? "")"
             placeholder="Enter your email address"
             required
         >
@@ -124,8 +129,6 @@ struct AuthView {
       return resetPasswordInputs
     }
   }
-
-  // TODO: Add placeholders for user's current information to `.updateProfile` view.
 
   func render() -> String {
     let titleText = action.rawValue.replacingOccurrences(of: "-", with: " ").capitalized

@@ -32,6 +32,7 @@ struct HomeView {
     """
   }
 
+  // TODO: Make into a sticky scrollable animation like on Stripe's homepage
   func featureList() -> String {
     """
     <h2 class="text-xl">Features</h2>

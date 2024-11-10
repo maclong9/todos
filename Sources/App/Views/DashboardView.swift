@@ -36,7 +36,7 @@ struct DashboardView {
             </button>
         </div>
         <dialog id="settings">
-            \(AuthView(action: .updateProfile).render())
+            \(AuthView(action: .updateProfile, user: user).render())
         </dialog>
         <dialog id="deletion" class="surface small">
             <h2>Are you sure?</h2>
