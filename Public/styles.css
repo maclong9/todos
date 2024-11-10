@@ -494,8 +494,9 @@
     }
 
     a {
-      font-size: var(--font-xs);
+      font-size: var(--font-2xs);
       color: var(--color-subtle);
+      font-weight: 300;
     }
 
     @media (min-width: 640px) {
