@@ -1,21 +1,19 @@
-/**
- A collection of reusable call-to-action buttons for site-wide use.
-
- Renders context-appropriate buttons based on navigation placement and user authentication state.
- 
- - Parameters:
-    - isNavigation: Whether the buttons appear in the header navigation
-    - isLoggedIn: Whether a user is currently authenticated. When true, displays a Dashboard button instead of Get Started
- */
+/// A collection of reusable call-to-action buttons for site-wide use.
+///
+/// Renders context-appropriate buttons based on navigation placement and user authentication state.
+///
+/// - Parameters:
+///    - isNavigation: Whether the buttons appear in the header navigation
+///    - isLoggedIn: Whether a user is currently authenticated. When true, displays a Dashboard button instead of Get Started
 struct ActionButtons {
-    let isNavigation: Bool
-    let isLoggedIn: Bool
-  
+  let isNavigation: Bool
+  let isLoggedIn: Bool
+
   init(isNavigation: Bool = false, isLoggedIn: Bool = false) {
     self.isNavigation = isNavigation
     self.isLoggedIn = isLoggedIn
   }
-  
+
   func render() -> String {
     """
     <div class="btn-group \(isNavigation ? "col" : "")">

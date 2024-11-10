@@ -2,21 +2,19 @@ import Foundation
 
 /// Represents possible user authentication actions in the application
 enum AuthAction: String {
-    case signup = "sign-up"
-    case login = "log-in"
-    case resetPassword = "reset-password"
-    case updateProfile = "update-profile"
+  case signup = "sign-up"
+  case login = "log-in"
+  case resetPassword = "reset-password"
+  case updateProfile = "update-profile"
 }
 
-/**
- A view that handles user authentication forms including signup, login, password reset, and profile updates.
- 
- Renders HTML forms with appropriate input fields and validation based on the specified authentication action.
- 
- - Parameters:
-    - action: The type of authentication form to display
-    - errorMessage: Optional error message to show above the form
- */
+/// A view that handles user authentication forms including signup, login, password reset, and profile updates.
+///
+/// Renders HTML forms with appropriate input fields and validation based on the specified authentication action.
+///
+/// - Parameters:
+///    - action: The type of authentication form to display
+///    - errorMessage: Optional error message to show above the form
 struct AuthView {
   let action: AuthAction
   let errorMessage: String

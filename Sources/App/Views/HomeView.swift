@@ -1,12 +1,10 @@
-/**
- A view that renders the marketing landing page of the application.
- 
- Displays the main value proposition, feature highlights, and appropriate call-to-action
- buttons based on user authentication state.
- 
- - Parameters:
-    - isLoggedIn: Whether a user is currently authenticated, affecting which CTAs are shown
- */
+/// A view that renders the marketing landing page of the application.
+///
+/// Displays the main value proposition, feature highlights, and appropriate call-to-action
+/// buttons based on user authentication state.
+///
+/// - Parameters:
+///    - isLoggedIn: Whether a user is currently authenticated, affecting which CTAs are shown
 struct HomeView {
   let isLoggedIn: Bool
 
