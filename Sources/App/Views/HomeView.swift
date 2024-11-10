@@ -17,6 +17,7 @@ struct HomeView {
   func heroSection() -> String {
     """
     <section class="grid hero">
+      <div class="background"></div>
       <div class="text">
         <h1>
           Take Control of

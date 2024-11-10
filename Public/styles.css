@@ -150,6 +150,18 @@
     &.hero {
       height: 70vh;
       padding-top: 1.25rem;
+      position: relative;
+      
+      .background {
+        position: absolute;
+        height: 100%;
+        width: 200%;
+        background: radial-gradient(oklch(25% 0.0013 106.42) 1px, transparent 1px);
+        background-size: 16px 16px;
+        -webkit-mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, #000 70%, transparent 100%);
+        mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, #000 70%, transparent 100%);
+        z-index: -10;
+      }
     }
 
     &.dashboard {
