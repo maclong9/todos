@@ -16,10 +16,16 @@
         --font-2xl: clamp(1.73rem, calc(1.6rem + 0.73vw), 1.99rem);
         --font-3xl: clamp(2.07rem, calc(1.91rem + 0.96vw), 2.38rem);
         --font-4xl: clamp(2.49rem, calc(2.28rem + 1.27vw), 2.86rem);
+        --font-5xl: clamp(2.99rem, calc(2.73rem + 1.68vw), 3.43rem);
+        --font-6xl: clamp(3.58rem, calc(3.27rem + 2.22vw), 4.12rem);
+        --font-7xl: clamp(4.30rem, calc(3.92rem + 2.93vw), 4.94rem);
+        --font-8xl: clamp(5.16rem, calc(4.70rem + 3.87vw), 5.93rem);
+        --font-9xl: clamp(6.19rem, calc(5.64rem + 5.11vw), 7.12rem);
 
         /* Colors */
-        --color-primary: oklch(0.58 0.28 250);
-        --color-secondary: oklch(0.57 0.27 220);
+        --color-primary: oklch(58% 0.28 250);
+        --color-secondary: oklch(57% 0.27 220);
+        --color-tertiary: oklch(15% 0.28 250);
         --color-base: oklch(96.69% 0.0013 106.42);
         --color-surface: oklch(98.5% 0.0013 106.42);
         --color-text: oklch(21.01% 0.014 87.55);
@@ -57,11 +63,13 @@
         background: var(--color-base);
         color: var(--color-text);
         text-wrap: pretty;
-        overflow-x: hidden;
     }
 
-    body {
-        min-height: 95vh;
+    html, body {
+        max-width: 100vw;
+        margin: 0;
+        padding: 0;
+        contain: paint;
     }
 
     @media (prefers-color-scheme: dark) {
@@ -88,7 +96,7 @@
     h1 {
         margin-bottom: 0;
         line-height: 1.1;
-        font-size: var(--font-4xl);
+        font-size: var(--font-7xl);
     }
 
     a {
@@ -148,30 +156,75 @@
         padding: 1.25rem 0 3rem;
 
         &.hero {
-            height: 70vh;
+            margin-top: 0;
             padding-top: 1.25rem;
-            position: relative;
 
             .background {
                 position: absolute;
+                top: 0;
+                left: 0;
                 height: 100%;
                 width: 200%;
-                background: radial-gradient(
-                    oklch(25% 0.0013 106.42) 1px,
-                    transparent 1px
-                );
-                background-size: 16px 16px;
-                -webkit-mask-image: radial-gradient(
-                    ellipse 50% 50% at 50% 50%,
-                    #000 70%,
-                    transparent 100%
-                );
-                mask-image: radial-gradient(
-                    ellipse 50% 50% at 50% 50%,
-                    #000 70%,
-                    transparent 100%
-                );
                 z-index: -10;
+                overflow: hidden;
+
+                /* Base dots layer */
+                &::before {
+                    content: "";
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: radial-gradient(
+                        oklch(25% 0.0013 106.42) 1px,
+                        transparent 1px
+                    );
+                    background-size: 16px 16px;
+                    -webkit-mask-image: radial-gradient(
+                        ellipse 50% 50% at 50% 50%,
+                        #000 70%,
+                        transparent 100%
+                    );
+                    mask-image: radial-gradient(
+                        ellipse 50% 50% at 50% 50%,
+                        #000 70%,
+                        transparent 100%
+                    );
+                }
+
+                /* Animated layers */
+                &::after,
+                .dots-layer-1,
+                .dots-layer-2 {
+                    content: "";
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: radial-gradient(
+                        var(--color-primary) 1px,
+                        transparent 1px
+                    );
+                    background-size: 16px 16px;
+                    opacity: 0;
+                    -webkit-mask-image: radial-gradient(
+                        ellipse 50% 50% at 50% 50%,
+                        #000 70%,
+                        transparent 100%
+                    );
+                    mask-image: radial-gradient(
+                        ellipse 50% 50% at 50% 50%,
+                        #000 70%,
+                        transparent 100%
+                    );
+                }
+
+                &::after {
+                    animation: twinkle 4s infinite;
+                    animation-delay: 7s;
+                }
             }
         }
 
@@ -217,24 +270,33 @@
     /* Grid Layouts */
     .grid {
         display: grid;
-        grid-template-columns: 1fr;
-        align-items: start;
-
-        &.gap {
-            gap: 3rem;
-        }
+        padding: 6rem 0;
+        position: relative;
 
         .text {
             display: flex;
             flex-direction: column;
             padding: 0 1rem;
+            height: 500px;
+            justify-content: center;
             order: 2;
-            margin: 0 auto;
+            padding-bottom: 3rem;
+
+            .subtitle {
+                font-weight: 700;
+            }
+
+            h2 {
+                font-size: 56px;
+            }
+
+            p {
+                font-size: 18px;
+                margin: 1.5rem 0;
+            }
         }
 
         img {
-            width: min(600px, 85vw);
-            height: auto;
             margin: 0 auto;
             order: 1;
         }
@@ -242,21 +304,78 @@
         @media (min-width: 640px) {
             grid-template-columns: repeat(2, 1fr);
             align-items: center;
-            padding: 3rem 1rem;
-
-            &.three {
-                grid-template-columns: repeat(3, 1fr);
-            }
+            padding: 3rem 0;
+            margin: 3rem 0;
 
             .text {
-                margin: 0;
                 order: 1;
+                width: 100%;
+                padding: 0 0 3rem 0;
+                margin: 0;
             }
 
             img {
-                width: min(600px, 50vw);
+                width: min(600px, 45vw);
                 order: 2;
-                margin-right: -2.3rem;
+                margin-right: -5rem;
+            }
+
+            &.sticky, &.slant {
+                gap: 6rem;
+            }
+            
+            &.sticky {
+                align-items: start;
+
+                .left {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 6rem;
+                }
+
+                .right {
+                    height: 100%;
+                    display: grid;
+                    gap: 6rem;
+
+                    .container {
+                        position: sticky;
+                        top: 2rem;
+
+                        img {
+                            width: min(600px, 30vw);
+                            margin-right: 0;
+                        }
+                        
+                        :nth-child(1) { top: 2rem; }
+                        :nth-child(2) { top: calc(2rem + 33%); }
+                        :nth-child(3) { top: calc(2rem + 66%); }
+                    }
+                }
+            }
+
+            &.slant {
+                position: relative;
+                margin-bottom: 0;
+
+                &::before {
+                    content: "";
+                    position: absolute;
+                    left: 50%;
+                    right: 50%;
+                    margin-left: -50vw;
+                    margin-right: -50vw;
+                    width: 100vw;
+                    height: 100%;
+                    padding: 2rem 0;
+                    background: var(--color-tertiary);
+                    z-index: -1;
+                    clip-path: polygon(0 4rem, 100% 0, 100% 100%, 0 100%);
+                }
+
+                .text {
+                    padding-bottom: 0;
+                }
             }
         }
     }
@@ -456,6 +575,40 @@
         border-radius: var(--radius-medium);
         background: var(--color-surface);
         padding: 1rem;
+        position: relative;
+
+        &::before {
+            content: "";
+            position: absolute;
+            inset: -2px;
+            background: linear-gradient(
+                90deg,
+                var(--color-primary),
+                var(--color-secondary),
+                var(--color-primary)
+            );
+            border-radius: calc(var(--radius-medium) + 3px);
+            z-index: -1;
+            animation: rotate 9s linear infinite;
+            mask:
+                linear-gradient(#fff 0 0) content-box,
+                linear-gradient(#fff 0 0);
+            mask-composite: exclude;
+            -webkit-mask:
+                linear-gradient(#fff 0 0) content-box,
+                linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            padding: 2px;
+        }
+
+        &::after {
+            content: "";
+            position: absolute;
+            inset: -2px;
+            background: inherit;
+            border-radius: calc(var(--radius-medium) + 3px);
+            z-index: -2;
+        }
 
         h2 {
             margin: 0;
@@ -470,14 +623,14 @@
             width: auto;
             max-width: 500px;
             padding: 1.5rem 2rem;
-            margin: 0 auto;
+            margin: 3px auto;
 
             p {
                 max-width: 400px;
             }
         }
     }
-
+    
     /* Form Components */
     .auth-form {
         width: 72.8vw;
@@ -691,6 +844,38 @@
             outline: 2px solid var(--color-info);
             outline-offset: 2px;
         }
+    }
+}
+
+@layer animation {
+    @keyframes twinkle {
+        0%, 100% {
+            opacity: 0;
+            transform: translateX(0);
+        }
+        25% {
+            opacity: 0.5;
+            transform: translateX(8px);
+        }
+        50% {
+            opacity: 0;
+            transform: translateX(16px);
+        }
+    }
+    
+    @keyframes rotate {
+        0%, 100% {
+             clip-path: inset(0px 0px 100% 0px);
+         }
+         25% {
+             clip-path: inset(0px 0px 0px 100%);
+         }
+         50% {
+             clip-path: inset(100% 0px 0px 0px);
+         }
+         75% {
+             clip-path: inset(0px 100% 0px 0px);
+         }
     }
 }
 

@@ -61,7 +61,9 @@ class TodoDashboard {
      */
     createTodoElement(todo) {
         return `
-        <li class="todo-item ${todo.completed ? "completed" : "" }" data-id="${todo.id}">
+        <li class="todo-item ${
+            todo.completed ? "completed" : ""
+        }" data-id="${todo.id}">
             <input 
                 type="checkbox" 
                 class="todo-checkbox" 
@@ -236,8 +238,10 @@ class TodoDashboard {
 
             // updates UI to reflect completed state
             todoItem.classList.toggle("completed", checked);
-			checkbox.setAttribute('checked', checked);
-			checkbox.ariaLabel = `Mark ${todoItem.title} as ${checked ? "incomplete" : "complete"}`
+            checkbox.setAttribute("checked", checked);
+            checkbox.ariaLabel = `Mark ${todoItem.title} as ${
+                checked ? "incomplete" : "complete"
+            }`;
         } catch (error) {
             console.error("Failed to update todo:", error);
             checkbox.checked = !checked;

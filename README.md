@@ -12,34 +12,21 @@
 - [ ] Testing Your Application `Tests`
 - [ ] Deploying This Application
 
-## TodoController
+## Animation Ideas
 
-### Example Usage
+### Reach Goals Faster
 
-```swift
-let todoController = TodoController(
-    fluent: app.fluent,
-    sessionAuthenticator: UserSessionAuthenticator(userRepository: userRepo)
-)
+- A to-do list with tasks being quickly added, and marked as complete. 
+- Transition to a rocket taking off from the last check mark.
 
-// Add routes to your application
-app.group("api", "todos") { group in
-    todoController.addRoutes(to: group)
-}
-```
+### Check Off On the Go
 
-### Creating and Managing Todos
+- An animation of a person checking off tasks on a mobile device as the background changes from home to, a park, a train and an office. 
+- Use Playful, energetic movements to capture the "rushing about" feeling.
 
-Here's an example of how to interact with the todo endpoints:
+### Chill Out and Relax
 
-```swift
-// Create a new todo
-let newTodo = try await client.post("api/todos") {
-    CreateTodoRequest(title: "Buy groceries")
-}
-
-// Mark todo as completed
-let updated = try await client.patch("api/todos/\(newTodo.id)") {
-    EditTodoRequest(completed: true)
-}
-```
+- Transitioning from a busy, cluttered scene to a more peaceful, uncluttered one.
+- Subtle, relaxing motions like swaying plants and drifting clouds.
+- Warm, muted color palettes and soft lighting to convey a sense of tranquility.
+- The person could be shown meditating in nature.

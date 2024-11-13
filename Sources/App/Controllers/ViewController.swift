@@ -3,8 +3,6 @@ import Hummingbird
 import HummingbirdAuth
 import HummingbirdFluent
 
-// TODO: Add Email Confirmation Flow
-
 /// A middleware that redirects unauthenticated users to the login page
 ///
 /// This middleware ensures that protected routes are only accessible to
@@ -292,7 +290,7 @@ struct ViewController {
     struct ResetDetails: Decodable {
         let email: String
     }
-    
+
     /// Processes password reset requests
     ///
     /// This route handles the password reset form submission. Currently a placeholder,
@@ -306,7 +304,8 @@ struct ViewController {
     ///   - request: The incoming HTTP request with the user's email
     ///   - context: The application context
     /// - Returns: A redirect response to the home page
-    /// - Note: TODO: Implement full password reset flow with email confirmation
+    /// - Note: TODO: Implement password reset and email verification
+    /// https://github.com/apple/swift-nio-imap
     @Sendable func resetDetails(request: Request, context: Context) async throws -> Response {
         let details = try await request.decode(as: ResetDetails.self, context: context)
         print("reset password for:", details.email)
