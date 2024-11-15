@@ -323,7 +323,7 @@
             &.sticky, &.slant {
                 gap: 6rem;
             }
-            
+
             &.sticky {
                 align-items: start;
 
@@ -346,10 +346,16 @@
                             width: min(600px, 30vw);
                             margin-right: 0;
                         }
-                        
-                        :nth-child(1) { top: 2rem; }
-                        :nth-child(2) { top: calc(2rem + 33%); }
-                        :nth-child(3) { top: calc(2rem + 66%); }
+
+                        :nth-child(1) {
+                            top: 2rem;
+                        }
+                        :nth-child(2) {
+                            top: calc(2rem + 33%);
+                        }
+                        :nth-child(3) {
+                            top: calc(2rem + 66%);
+                        }
                     }
                 }
             }
@@ -630,7 +636,7 @@
             }
         }
     }
-    
+
     /* Form Components */
     .auth-form {
         width: 72.8vw;
@@ -862,20 +868,20 @@
             transform: translateX(16px);
         }
     }
-    
+
     @keyframes rotate {
         0%, 100% {
-             clip-path: inset(0px 0px 100% 0px);
-         }
-         25% {
-             clip-path: inset(0px 0px 0px 100%);
-         }
-         50% {
-             clip-path: inset(100% 0px 0px 0px);
-         }
-         75% {
-             clip-path: inset(0px 100% 0px 0px);
-         }
+            clip-path: inset(0px 0px 100% 0px);
+        }
+        25% {
+            clip-path: inset(0px 0px 0px 100%);
+        }
+        50% {
+            clip-path: inset(100% 0px 0px 0px);
+        }
+        75% {
+            clip-path: inset(0px 100% 0px 0px);
+        }
     }
 }
 

@@ -7,11 +7,11 @@
 ///    - isLoggedIn: Whether a user is currently authenticated, affecting which CTAs are shown
 struct HomeView {
     let isLoggedIn: Bool
-    
+
     init(isLoggedIn: Bool = false) {
         self.isLoggedIn = isLoggedIn
     }
-    
+
     func heroSection() -> String {
         """
         <section class="grid hero">
@@ -31,7 +31,7 @@ struct HomeView {
         </section>
         """
     }
-    
+
     // TODO: Make into a sticky scrollable animation like on Stripe's homepage
     func featureList() -> String {
         """
@@ -84,7 +84,7 @@ struct HomeView {
         </section>
         """
     }
-    
+
     func productDemo() -> String {
         """
         <section class="grid slant">
@@ -99,7 +99,7 @@ struct HomeView {
         </section>
         """
     }
-    
+
     func callToAction() -> String {
         """
         <section>
@@ -115,7 +115,7 @@ struct HomeView {
         </section>
         """
     }
-    
+
     func render() -> String {
         """
         \(heroSection())
