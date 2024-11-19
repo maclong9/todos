@@ -36,7 +36,7 @@ struct AuthView {
                 id="name" 
                 name="name"
                 value="\(user?.name ?? "")"
-                placeholder="Enter your full name"
+                placeholder="Some Name"
                 autocomplete="name"
                 required
             >
@@ -48,7 +48,7 @@ struct AuthView {
                 id="email" 
                 name="email"
                 value="\(user?.email ?? "")"
-                placeholder="Enter your email address"
+                placeholder="e.g. name@example.com"
                 required
             >
         </div>
@@ -142,11 +142,11 @@ struct AuthView {
                 \(generateInputs())
                 \(action == .updateProfile
               ? """
-                <button class="destructive" style="margin-bottom: .5rem;" type="button" onclick="settings.close(); deletion.showModal()">
+                <button id="settings-delete" class="destructive" style="margin-bottom: .5rem;" type="button">
                     Delete Account
                 </button>
                 <div class="btn-group">
-                  <button onclick="settings.close()">Cancel</button>
+                  <button id="settings-cancel">Cancel</button>
                   <button class="primary" type="submit">\(titleText)</button>
                 </div>
                 """

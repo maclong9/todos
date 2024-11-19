@@ -22,12 +22,6 @@ final class User: Model, PasswordAuthenticatable, @unchecked Sendable {
     @Field(key: "email")
     var email: String
 
-    @Field(key: "email_verified")
-    var emailVerified: Bool
-
-    @Field(key: "email_verification_token")
-    var emailVerificationToken: String?
-
     @Field(key: "name")
     var name: String
 
@@ -50,8 +44,6 @@ final class User: Model, PasswordAuthenticatable, @unchecked Sendable {
         self.id = id
         self.name = name
         self.email = email
-        self.emailVerified = false
-        self.emailVerificationToken = UUID().uuidString
         self.passwordHash = passwordHash
 
     }

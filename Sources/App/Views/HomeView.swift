@@ -72,13 +72,13 @@ struct HomeView {
           </div>
           <div class="right">
             <div class="container">
-              <img src="/api/placeholder/600/400" alt="placeholder" />
+              <img src="https://placehold.co/200x300/EEE/31343C" alt="placeholder" />
             </div>
             <div class="container">
-              <img src="/api/placeholder/600/400" alt="placeholder" />
+              <img src="https://placehold.co/200x300/EEE/31343C" alt="placeholder" />
             </div>
             <div class="container">
-              <img src="/api/placeholder/600/400" alt="placeholder" />
+              <img src="https://placehold.co/200x300/EEE/31343C" alt="placeholder" />
             </div>
           </div>
         </section>
@@ -95,7 +95,7 @@ struct HomeView {
                 By keeping things simple Swift Todos allows you to focus on the tasks that really matter and achieving them, rather than spending your time building a whole system to track your tasks.
               </p>
             </div>
-          <img src="/api/placeholder/600/400" alt="placeholder" />
+          <img src="https://placehold.co/200x300/EEE/31343C" alt="placeholder" />
         </section>
         """
     }

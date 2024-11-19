@@ -26,11 +26,11 @@ struct DashboardView {
         <header>
             <h1>Welcome Back, \(user.name)</h1>
             <div class="btn-group">
-                <button class="unstyle" onclick="settings.showModal()">
+                <button id="settings-open" class="unstyle">
                     ⚙️
                     <span class="popover">Settings</span>
                 </button>
-                <button class="unstyle" onclick="TodoDashboard.logout()" aria-label="logout">
+                <button id="logout-button" class="unstyle" aria-label="logout">
                     🚪
                     <span class="popover">Logout</span>
                 </button>
@@ -45,7 +45,7 @@ struct DashboardView {
                    You will not be able to recover your account later.
                 </p>
                 <form class="btn-group" action="delete-account">
-                    <button type="button" onclick="deletion.close()">Cancel</button>
+                    <button id="deletion-cancel" type="button">Cancel</button>
                     <button class="destructive" type="submit">Delete Account</button>
                 </form>
             </dialog>

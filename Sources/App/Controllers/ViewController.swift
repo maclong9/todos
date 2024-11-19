@@ -304,8 +304,6 @@ struct ViewController {
     ///   - request: The incoming HTTP request with the user's email
     ///   - context: The application context
     /// - Returns: A redirect response to the home page
-    /// - Note: TODO: Implement password reset and email verification
-    /// https://github.com/apple/swift-nio-imap
     @Sendable func resetDetails(request: Request, context: Context) async throws -> Response {
         let details = try await request.decode(as: ResetDetails.self, context: context)
         print("reset password for:", details.email)

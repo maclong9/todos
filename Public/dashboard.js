@@ -1,7 +1,6 @@
 /**
  * @fileoverview Dashboard management system for Todo application
  * @description Handles todo creation, updates, deletion, and user management
- * @version 1.1.0
  * @license Apache-2.0
  */
 
@@ -15,11 +14,11 @@
 
 /**
  * Class representing a Todo Dashboard application
- * @class TodoDashboard
+ * @class TodoDashboardController
  * @description Manages the Todo application's UI and server interactions, including
  * todo creation, updates, and delete.
  */
-class TodoDashboard {
+class TodoDashboardController {
     constructor() {
         // Cache frequently used DOM elements for better performance
         this.dashboard = document.querySelector(".dashboard");
@@ -27,12 +26,21 @@ class TodoDashboard {
         this.todoContainer = this.main.querySelector(".list-container");
         this.form = this.main.querySelector(".todo-form");
         this.titleInput = this.main.querySelector("#title");
+        
+        // Dashboard Menu Items
+        this.settingsOpen = this.dashboard.querySelector('#settings-open');
+        this.settingsCancel = this.dashboard.querySelector('#settings-cancel');
+        this.settingsDelete = this.dashboard.querySelector("#settings-delete");
+        this.deletionCancel = this.dashboard.querySelector("#deletion-cancel");
+        this.logoutButton = this.dashboard.querySelector("#logout-button");
+        
 
         // Set to track todos that have unsaved changes
         this.dirtyTodos = new Set();
 
         // setup document event listeners
         this.initializeEventListeners();
+        this.initializeModalEventListeners();
     }
 
     /**
@@ -41,17 +49,44 @@ class TodoDashboard {
      * @returns {void}
      */
     initializeEventListeners() {
+        // Handle new todo item submission
         this.form.addEventListener("submit", (e) => this.handleSubmit(e));
 
+        // Handle clicks for todo items
         this.dashboard.addEventListener(
             "click",
             (e) => this.handleDashboardClick(e),
         );
 
+        // Handle input changes for todo items
         this.dashboard.addEventListener(
             "input",
             (e) => this.handleTodoInput(e),
         );
+        
+        // Handle user logout
+        this.logoutButton.addEventListener("click", () => TodoDashboardController.logout());    }
+    
+    /**
+     * Initializes event listeners for modal interactions
+     * @private
+     * @returns {void}
+     */
+    initializeModalEventListeners() {
+        // Settings modal open/close
+        this.settingsOpen.addEventListener('click', () => settings.showModal());
+        
+        // Cancel settings menu without submission
+        this.settingsCancel.addEventListener('click', () => settings.close());
+        
+        // Open delete account menu
+        this.settingsDelete.addEventListener("click", () => {
+            settings.close();
+            deletion.showModal();
+        })
+        
+        // Cancel delete account menu
+        this.deletionCancel.addEventListener("click", () => deletion.close())
     }
 
     /**
@@ -317,4 +352,4 @@ class TodoDashboard {
 }
 
 // Initialize the dashboard when the DOM is fully loaded
-document.addEventListener("DOMContentLoaded", () => new TodoDashboard());
+document.addEventListener("DOMContentLoaded", () => new TodoDashboardController());
