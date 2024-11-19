@@ -223,7 +223,7 @@
 
                 &::after {
                     animation: twinkle 4s infinite;
-                    animation-delay: 7s;
+                    animation-delay: 10s;
                 }
             }
         }
@@ -861,11 +861,11 @@
         }
         25% {
             opacity: 0.5;
-            transform: translateX(8px);
+            transform: translateX(-8px);
         }
         50% {
             opacity: 0;
-            transform: translateX(16px);
+            transform: translateX(-16px);
         }
     }
 

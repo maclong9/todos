@@ -11,11 +11,21 @@ struct UserRepository: UserSessionRepository, UserPasswordRepository {
     typealias Session = UUID
 
     let fluent: Fluent
-
+    
+    /// Find user from session UUID
+    ///
+    /// - Parameters:
+    ///   - session: The UUID for the current session
+    ///   - context: Context containing the user session
     func getUser(from session: UUID, context: UserRepositoryContext) async throws -> User? {
         try await User.find(session, on: self.fluent.db())
     }
 
+    /// Find user via email address
+    ///
+    ///  - Parameters:
+    ///   - email: labeled`named` - a string containing the users email address
+    ///   - context: Context containing the user session
     func getUser(named email: String, context: UserRepositoryContext) async throws -> User? {
         try await User.query(on: self.fluent.db())
             .filter(\.$email == email)
