@@ -1,8 +1,8 @@
 ## Swift Todos
 
-This is an example application developed with Swift Hummingbird for educational and documentation purposes. It employs a straightforward templating mechanism integrated directly into the Swift code and provides a user-friendly CRUD web application for users to register and manage their to-do list tasks.
+This is an example application developed with Swift Hummingbird for educational and documentation purposes. It employs a straightforward templating mechanism integrated directly into the Swift code and a user-friendly CRUD web application todo item manaement.
 
-The application is meticulously documented to ensure its maintainability and serve as a reference point for the processes I have acquired. Additionally, I provide specific details about the setup and architecture of the application within this `README.md` file.
+The application is documented to ensure its maintainability and serve as a reference point for the processes I have acquired. Additionally, I provide specific details about the setup and architecture of the application within this `README.md` file.
 
 ## Locally Running the Application
 
