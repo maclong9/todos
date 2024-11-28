@@ -4,6 +4,7 @@ import Hummingbird
 import HummingbirdAuth
 import HummingbirdCompression
 import HummingbirdFluent
+import SwiftSMTP
 
 public protocol AppArguments {
     var inMemoryDatabase: Bool { get }
@@ -81,6 +82,11 @@ func buildApplication(_ arguments: some AppArguments) async throws -> some Appli
         to: router.group("api/users")
     )
     ViewController(fluent: fluent, sessionAuthenticator: sessionAuthenticator).addRoutes(to: router)
+    
+    router.get("/api/mail-test") { _, _ in
+        let configuration = Configuration.fromEnvironment()
+        return Request.swiftSMTP.mailer.send(email: "some sweet email").transform(to: Response())
+    }
 
     var app = Application(
         router: router,

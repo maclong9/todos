@@ -2,27 +2,26 @@
 import PackageDescription
 
 let package = Package(
-    name: "swift-todos",
-    platforms: [
-        .macOS(.v14)
-    ],
+    name: "SwiftTodos",
+    platforms: [.macOS(.v14)],
     dependencies: [
         .package(url: "https://github.com/vapor/fluent-kit.git", from: "1.48.5"),
         .package(url: "https://github.com/vapor/fluent-sqlite-driver.git", from: "4.7.0"),
         .package(
-            url: "https://github.com/hummingbird-project/hummingbird-auth.git",
-            from: "2.0.0-rc.5"
-        ),
+            url: "https://github.com/hummingbird-project/hummingbird-auth.git", from: "2.0.0-rc.5"),
         .package(
             url: "https://github.com/hummingbird-project/hummingbird-compression.git",
-            from: "2.0.0-rc"
-        ),
+            from: "2.0.0-rc"),
         .package(
             url: "https://github.com/hummingbird-project/hummingbird-fluent.git",
-            from: "2.0.0-beta.2"
-        ),
+            from: "2.0.0-beta.2"),
         .package(url: "https://github.com/hummingbird-project/hummingbird.git", from: "2.3.0"),
         .package(url: "https://github.com/apple/swift-argument-parser.git", from: "1.4.0"),
+        .package(url: "https://github.com/sersoft-gmbh/swift-smtp.git", from: "2.0.0")
+        /// TODO: Implement Password Confirmation and Reset Flows
+        /// Start by sending an email from an arbirtrary enpoint
+        /// then build confirmation
+        /// then build reset
     ],
     targets: [
         .executableTarget(

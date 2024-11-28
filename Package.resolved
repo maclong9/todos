@@ -1,5 +1,5 @@
 {
-  "originHash" : "5face7d685c7638cea84aa616c3acbafa7ac259982d168a35a2d06a7390b74b7",
+  "originHash" : "af4ea9b1be77175db6793511d2ced290173c7c6145bddd4c1be6aa3f763ca4b9",
   "pins" : [
     {
       "identity" : "async-http-client",
@@ -26,6 +26,15 @@
       "state" : {
         "revision" : "9dedf2c97c00792ffdf436601cdef1f60a90e0ad",
         "version" : "1.3.0"
+      }
+    },
+    {
+      "identity" : "console-kit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/vapor/console-kit.git",
+      "state" : {
+        "revision" : "966d89ae64cd71c652a1e981bc971de59d64f13d",
+        "version" : "4.15.1"
       }
     },
     {
@@ -80,6 +89,24 @@
       "state" : {
         "revision" : "24ebbb5ef55507ebe8ababd000afbe084c6a549a",
         "version" : "2.0.0-beta.5"
+      }
+    },
+    {
+      "identity" : "multipart-kit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/vapor/multipart-kit.git",
+      "state" : {
+        "revision" : "a31236f24bfd2ea2f520a74575881f6731d7ae68",
+        "version" : "4.7.0"
+      }
+    },
+    {
+      "identity" : "routing-kit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/vapor/routing-kit.git",
+      "state" : {
+        "revision" : "8c9a227476555c55837e569be71944e02a056b72",
+        "version" : "4.9.1"
       }
     },
     {
@@ -290,12 +317,39 @@
       }
     },
     {
+      "identity" : "swift-smtp",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/sersoft-gmbh/swift-smtp.git",
+      "state" : {
+        "revision" : "f1110893aa74c42f4885c664f0b6c0cb3538e964",
+        "version" : "2.11.1"
+      }
+    },
+    {
       "identity" : "swift-system",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-system.git",
       "state" : {
         "revision" : "c8a44d836fe7913603e246acab7c528c2e780168",
         "version" : "1.4.0"
+      }
+    },
+    {
+      "identity" : "vapor",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/vapor/vapor",
+      "state" : {
+        "revision" : "fb619ab6485a88787ef9c78ba70e7415f8ebf981",
+        "version" : "4.106.4"
+      }
+    },
+    {
+      "identity" : "websocket-kit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/vapor/websocket-kit.git",
+      "state" : {
+        "revision" : "4232d34efa49f633ba61afde365d3896fc7f8740",
+        "version" : "2.15.0"
       }
     }
   ],

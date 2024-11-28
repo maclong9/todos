@@ -5,8 +5,6 @@ import XCTest
 
 @testable import App
 
-// TODO: Figure out if you can test frontend interactivity from here
-
 final class AppTests: XCTestCase, @unchecked Sendable {
     struct TestArguments: AppArguments {
         var hostname: String { "localhost" }
@@ -19,9 +17,7 @@ final class AppTests: XCTestCase, @unchecked Sendable {
         case unexpectedStatus(HTTPResponse.Status)
     }
 
-    func createUser(_ user: CreateUserRequest, client: some TestClientProtocol) async throws
-        -> CreateUserResponse
-    {
+    func createUser(_ user: CreateUserRequest, client: some TestClientProtocol) async throws -> CreateUserResponse {
         try await client.execute(
             uri: "/api/users",
             method: .post,
@@ -33,9 +29,7 @@ final class AppTests: XCTestCase, @unchecked Sendable {
         }
     }
 
-    func login(username: String, password: String, client: some TestClientProtocol) async throws
-        -> String?
-    {
+    func login(username: String, password: String, client: some TestClientProtocol) async throws -> String? {
         try await client.execute(
             uri: "/api/users/login",
             method: .post,
@@ -47,9 +41,7 @@ final class AppTests: XCTestCase, @unchecked Sendable {
         }
     }
 
-    func urlEncodedLogin(username: String, password: String, client: some TestClientProtocol)
-        async throws -> String?
-    {
+    func urlEncodedLogin(username: String, password: String, client: some TestClientProtocol) async throws -> String? {
         try await client.execute(
             uri: "/login",
             method: .post,
@@ -61,12 +53,8 @@ final class AppTests: XCTestCase, @unchecked Sendable {
         }
     }
 
-    func createTodo(
-        _ todo: CreateTodoRequest,
-        cookie: String? = nil,
-        client: some TestClientProtocol
-    )
-        async throws -> Todo
+    func createTodo(_ todo: CreateTodoRequest, cookie: String? = nil, client: some TestClientProtocol) async throws
+        -> Todo
     {
         var headers: HTTPFields = [.contentType: "application/json"]
         if let cookie = cookie {
@@ -86,9 +74,7 @@ final class AppTests: XCTestCase, @unchecked Sendable {
         }
     }
 
-    func getTodo(_ id: String, cookie: String? = nil, client: some TestClientProtocol) async throws
-        -> Todo?
-    {
+    func getTodo(_ id: String, cookie: String? = nil, client: some TestClientProtocol) async throws -> Todo? {
         return try await client.execute(
             uri: "/api/todos/\(id)",
             method: .get,
@@ -99,9 +85,7 @@ final class AppTests: XCTestCase, @unchecked Sendable {
         }
     }
 
-    func deleteTodo(_ id: String, cookie: String? = nil, client: some TestClientProtocol)
-        async throws
-    {
+    func deleteTodo(_ id: String, cookie: String? = nil, client: some TestClientProtocol) async throws {
         return try await client.execute(
             uri: "/api/todos/\(id)",
             method: .delete,
@@ -111,12 +95,9 @@ final class AppTests: XCTestCase, @unchecked Sendable {
         }
     }
 
-    func editTodo(
-        _ id: String,
-        _ todo: EditTodoRequest,
-        cookie: String? = nil,
-        client: some TestClientProtocol
-    ) async throws -> Todo? {
+    func editTodo(_ id: String, _ todo: EditTodoRequest, cookie: String? = nil, client: some TestClientProtocol)
+        async throws -> Todo?
+    {
         var headers: HTTPFields = [.contentType: "application/json"]
         if let cookie = cookie {
             headers[.cookie] = cookie

@@ -97,8 +97,7 @@ struct UserController {
     ///   - context: The application context
     /// - Returns: An HTTP status indicating success
     /// - Throws: Errors from the session clearing operation
-    @Sendable func logout(_ request: Request, context: Context) async throws -> HTTPResponse.Status
-    {
+    @Sendable func logout(_ request: Request, context: Context) async throws -> HTTPResponse.Status {
         context.sessions.clearSession()
         return .ok
     }

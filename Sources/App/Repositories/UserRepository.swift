@@ -11,7 +11,7 @@ struct UserRepository: UserSessionRepository, UserPasswordRepository {
     typealias Session = UUID
 
     let fluent: Fluent
-    
+
     /// Find user from session UUID
     ///
     /// - Parameters:
