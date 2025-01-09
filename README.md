@@ -1,6 +1,6 @@
 ## Swift Todos
 
-This is an example application developed with Swift Hummingbird for educational and documentation purposes. It employs a straightforward templating mechanism integrated directly into the Swift code and a user-friendly CRUD web application todo item manaement.
+This is an example application developed with Swift Hummingbird for educational and documentation purposes. It employs a straightforward templating mechanism integrated directly into the Swift code and a user-friendly CRUD web application for todo item management.
 
 The application is documented to ensure its maintainability and serve as a reference point for the processes I have acquired. Additionally, I provide specific details about the setup and architecture of the application within this `README.md` file.
 
@@ -54,72 +54,3 @@ The application operates on HTTP requests and responses, with the application co
 ## Middleware
 
 Several middleware components are employed within the application, including:
-- `LogRequestMiddleware`: This middleware logs server requests.
-- `CompressionMiddleware`: Responsible for reducing the size of response bodies.
-- `FilesMiddleware`: Handles public assets accessible by the application.
-- `CorsMiddleware`: Sets the appropriate cross-origin request headers.
-- `SessionMiddleware`: Redirects users attempting to access authenticated routes without proper login.
-
-## Templating with Swift and the `HTML` Extension
-
-To minimize dependencies while maintaining server-side rendering flexibility, templates are composed of multi-line Swift strings with interpolation capabilities for passing values.
-
-## Server Management: `App.swift` and `Application+build.swift`
-
-These two files are responsible for the primary application thread. Within `App.swift`, you will find the declaration of acceptable arguments for the application handled by `swift-argument-parser`. These flags can be toggled and extended to modify application behavior at runtime.
-
-In `Application+build.swift`, the `buildApplication` function is invoked from `App.swift`. This function provisions the database, executes migrations if the `—migrate` flag is passed, defines the `userRepository` for use with the `SessionAuthenticator`, and checks the working directory to ensure the assets are loaded correctly.
-
-Next, the `router` is initialized, and middlewares are added to it. A health check route is added for rapid server status verification. The `SessionAuthenticator` is subsequently defined to be passed to the controllers handling the `Todo`, `User`, and `View` routes.
-
-Finally, the `app` is defined, passed the `router`, arguments, and the fluent as a service, and returned.
-
-## Security
-
-Passwords are hashed using `BCrypt`, the Bcrypt hashing function was designed by Niels Provos and David Mazières, based on the Blowfish cipher and presented at USENIX in 1999. Besides incorporating a salt to protect against rainbow table attacks, bcrypt is an adaptive function: over time, the iteration count can be increased to make it slower, so it remains resistant to brute-force search attacks even with increasing computation power.
-
-## Design System with CSS
-
-A simple design system is implemented using CSS custom properties, this includes some fonts; a basic typography scale; a selection of brand colours; semantic colours; container rounding and some effects such as dialog overlay and shadows.
-
-All styles are written in the one CSS file however that file is split up into sections via the `@layout` pattern which helps with code organisation and scoping. 
-
-> [!NOTE]
-> I may create a second branch with this setup using Elementary, HTMX and TailwindCSS just to see how I enjoy workin with that trifecta of tools.
-
-## Client-Side Updates with JavaScript
-
-As mentioned earlier JavaScript provides a `ViewController` for interacting with the user interface and performing client side updates allowing the user to inreact with the application without having to refresh the page every single time they make a change.
-
-## Application Testing in `Tests`
-
-> [!NOTE]
-> TODO
-
-## Deployment of the Application
-
-> [!NOTE]
-> TODO
-
-## Todo:
-
-### Animation Concepts
-
-The home page grid serves a purpose, although it is currently empty. At some point, I envision implementing a visually appealing animation on the right-hand side of the features grid.
-
-#### Enhance Performance and Reach Goals More Efficiently
-
-- A to-do list with tasks being swiftly added and marked as completed.
-- A transition from a check mark to a rocket taking off.
-
-#### Check Off On the Go
-
-- An animation of a person checking off tasks on a mobile device as the background transitions from home to a park, a train, and an office.
-- Use playful and energetic movements to capture the sense of rushing about.
-
-#### Chill Out and Relax
-
-- A transition from a busy and cluttered scene to a more peaceful and uncluttered one.
-- Subtle and relaxing motions such as swaying plants and drifting clouds.
-- Warm and muted color palettes and soft lighting to convey a sense of tranquility.
-- The person could be shown meditating in nature.
