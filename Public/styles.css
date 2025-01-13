@@ -318,6 +318,7 @@
                 width: min(600px, 45vw);
                 order: 2;
                 margin-right: -5rem;
+                max-height: 600px;
             }
 
             &.sticky, &.slant {
