@@ -26,25 +26,29 @@ class TodoDashboardController {
         this.todoContainer = this.main.querySelector(".list-container");
         this.form = this.main.querySelector(".todo-form");
         this.titleInput = this.main.querySelector("#title");
-        
+
         // Dashboard Menu Items
-        this.settingsOpen = this.dashboard.querySelector('#settings-open');
-        this.settingsCancel = this.dashboard.querySelector('#settings-cancel');
+        this.settingsOpen = this.dashboard.querySelector("#settings-open");
+        this.settingsCancel = this.dashboard.querySelector("#settings-cancel");
         this.settingsDelete = this.dashboard.querySelector("#settings-delete");
         this.deletionCancel = this.dashboard.querySelector("#deletion-cancel");
         this.logoutButton = this.dashboard.querySelector("#logout-button");
         
+        // Dialogs
+        this.settingsDialog = this.dashboard.querySelector("#settings");
+        this.deletionDialog = this.dashboard.querySelector("#deletion");
 
         // Set to track todos that have unsaved changes
         this.dirtyTodos = new Set();
 
         // setup document event listeners
         this.initializeEventListeners();
-        this.initializeModalEventListeners();
+        this.initializeDialogEventListeners();
+        this.initializeKeyboardEventListeners();
     }
 
     /**
-     * Initializes all event listeners for the dashboard
+     * Initializes regular event listeners for the dashboard
      * @private
      * @returns {void}
      */
@@ -53,40 +57,66 @@ class TodoDashboardController {
         this.form.addEventListener("submit", (e) => this.handleSubmit(e));
 
         // Handle clicks for todo items
-        this.dashboard.addEventListener(
-            "click",
-            (e) => this.handleDashboardClick(e),
+        this.dashboard.addEventListener("click", (e) =>
+            this.handleDashboardClick(e),
         );
 
         // Handle input changes for todo items
-        this.dashboard.addEventListener(
-            "input",
-            (e) => this.handleTodoInput(e),
+        this.dashboard.addEventListener("input", (e) =>
+            this.handleTodoInput(e),
         );
-        
+
         // Handle user logout
-        this.logoutButton.addEventListener("click", () => TodoDashboardController.logout());    }
-    
+        this.logoutButton.addEventListener("click", () =>
+            TodoDashboardController.logout(),
+        );
+    }
+
     /**
-     * Initializes event listeners for modal interactions
+     * Initializes event listeners for dialog interactions
      * @private
      * @returns {void}
      */
-    initializeModalEventListeners() {
-        // Settings modal open/close
-        this.settingsOpen.addEventListener('click', () => settings.showModal());
-        
-        // Cancel settings menu without submission
-        this.settingsCancel.addEventListener('click', () => settings.close());
-        
+    initializeDialogEventListeners() {
+        // Settings dialog open/close
+        this.settingsOpen.addEventListener("click", () => settings.showDialog());
+        this.settingsCancel.addEventListener("click", () => settings.close());
+
         // Open delete account menu
         this.settingsDelete.addEventListener("click", () => {
             settings.close();
-            deletion.showModal();
-        })
-        
+            deletion.showDialog();
+        });
+
         // Cancel delete account menu
-        this.deletionCancel.addEventListener("click", () => deletion.close())
+        this.deletionCancel.addEventListener("click", () => deletion.close());
+    }
+    
+    /**
+     * Initializes keyboard event listeners for the dashboard
+     * @private
+     * @returns {void}
+     */
+    initializeKeyboardEventListeners() {
+        this.dashboard.addEventListener("keydown", async (e) => {
+            // Check if the pressed key is Enter
+            if (e.key === "Enter") {
+                const target = e.target;
+
+                // Check if we're in a todo title input that has unsaved changes
+                if (target.matches(".todo-title")) {
+                    const todoItem = target.closest(".todo-item");
+                    const todoId = todoItem.dataset.id;
+
+                    // Only save if the todo is dirty (has unsaved changes)
+                    if (this.dirtyTodos.has(todoId)) {
+                        e.preventDefault(); // Prevent default enter behavior
+                        await this.saveTodoTitle(todoItem);
+                        target.blur(); // Remove focus after saving
+                    }
+                }
+            }
+        });
     }
 
     /**
@@ -96,9 +126,10 @@ class TodoDashboardController {
      */
     createTodoElement(todo) {
         return `
-        <li class="todo-item ${
-            todo.completed ? "completed" : ""
-        }" data-id="${todo.id}">
+        <li 
+            class="todo-item ${todo.completed ? "completed" : ""}" 
+            data-id="${todo.id}"
+        >
             <input 
                 type="checkbox" 
                 class="todo-checkbox" 
@@ -148,12 +179,14 @@ class TodoDashboardController {
             }
 
             // Append the new todo item
-            const todoElement = document.createRange()
-                .createContextualFragment(this.createTodoElement(newTodo))
-                .firstElementChild;
-            this.todoContainer.querySelector(".todo-list").appendChild(
-                todoElement,
-            );
+            const todoElement = document
+                .createRange()
+                .createContextualFragment(
+                    this.createTodoElement(newTodo),
+                ).firstElementChild;
+            this.todoContainer
+                .querySelector(".todo-list")
+                .appendChild(todoElement);
 
             // reset new todo form input
             this.titleInput.value = "";
@@ -352,4 +385,7 @@ class TodoDashboardController {
 }
 
 // Initialize the dashboard when the DOM is fully loaded
-document.addEventListener("DOMContentLoaded", () => new TodoDashboardController());
+document.addEventListener(
+    "DOMContentLoaded",
+    () => new TodoDashboardController(),
+);
