@@ -5,7 +5,6 @@ let package = Package(
     name: "SwiftTodos",
     platforms: [.macOS(.v14)],
     dependencies: [
-        .package(url: "https://github.com/joannis/SMTPKitten.git", from: "1.0.0"),
         .package(url: "https://github.com/vapor/fluent-kit.git", from: "1.48.5"),
         .package(url: "https://github.com/vapor/fluent-sqlite-driver.git", from: "4.7.0"),
         .package(url: "https://github.com/hummingbird-project/hummingbird-auth.git", from: "2.0.0-rc.5"),
@@ -18,7 +17,6 @@ let package = Package(
         .executableTarget(
             name: "App",
             dependencies: [
-                .product(name: "SMTPKitten", package: "SMTPKitten"),
                 .product(name: "ArgumentParser", package: "swift-argument-parser"),
                 .product(name: "Bcrypt", package: "hummingbird-auth"),
                 .product(name: "FluentKit", package: "fluent-kit"),
