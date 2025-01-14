@@ -18,8 +18,8 @@
         --font-4xl: clamp(2.49rem, calc(2.28rem + 1.27vw), 2.86rem);
         --font-5xl: clamp(2.99rem, calc(2.73rem + 1.68vw), 3.43rem);
         --font-6xl: clamp(3.58rem, calc(3.27rem + 2.22vw), 4.12rem);
-        --font-7xl: clamp(4.30rem, calc(3.92rem + 2.93vw), 4.94rem);
-        --font-8xl: clamp(5.16rem, calc(4.70rem + 3.87vw), 5.93rem);
+        --font-7xl: clamp(4.3rem, calc(3.92rem + 2.93vw), 4.94rem);
+        --font-8xl: clamp(5.16rem, calc(4.7rem + 3.87vw), 5.93rem);
         --font-9xl: clamp(6.19rem, calc(5.64rem + 5.11vw), 7.12rem);
 
         /* Colors */
@@ -65,7 +65,8 @@
         text-wrap: pretty;
     }
 
-    html, body {
+    html,
+    body {
         max-width: 100vw;
         margin: 0;
         padding: 0;
@@ -114,6 +115,7 @@
     body {
         display: flex;
         flex-direction: column;
+        min-height: 100dvh;
     }
 
     p {
@@ -140,14 +142,17 @@
         }
     }
 
+    /* Main Layout */
     main {
-        flex-grow: 1;
+        flex: 1 0 auto;
+        width: 100%;
         max-width: 1024px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
 
         @media (min-width: 768px) {
-            width: 100%;
             padding: 0;
-            margin: 0 auto;
         }
     }
 
@@ -247,12 +252,11 @@
             }
 
             main {
-                min-height: calc(100vh - (98px + 16px) - (88px + 16px));
-                height: 100%;
                 display: flex;
                 flex-direction: column-reverse;
                 align-items: center;
                 justify-content: space-between;
+                flex-grow: 0;
             }
 
             @media (min-width: 640px) {
@@ -321,7 +325,8 @@
                 max-height: 600px;
             }
 
-            &.sticky, &.slant {
+            &.sticky,
+            &.slant {
                 gap: 6rem;
             }
 
@@ -389,10 +394,12 @@
 
     /* Footer Layout */
     footer {
+        flex-shrink: 0;
         display: grid;
         place-items: center;
         color: var(--color-subtle);
         padding-bottom: 1.5rem;
+        width: 100%;
     }
 }
 
@@ -418,7 +425,10 @@
         right: 0;
         opacity: 0;
         transform: translateY(-10px);
-        transition: opacity 0.5s, transform 0.5s, display 0.5s ease-in-out;
+        transition:
+            opacity 0.5s,
+            transform 0.5s,
+            display 0.5s ease-in-out;
 
         &:popover-open {
             @starting-style {
@@ -856,7 +866,8 @@
 
 @layer animation {
     @keyframes twinkle {
-        0%, 100% {
+        0%,
+        100% {
             opacity: 0;
             transform: translateX(0);
         }
@@ -871,7 +882,8 @@
     }
 
     @keyframes rotate {
-        0%, 100% {
+        0%,
+        100% {
             clip-path: inset(0px 0px 100% 0px);
         }
         25% {
