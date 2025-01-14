@@ -17,11 +17,6 @@ let package = Package(
             from: "2.0.0-beta.2"),
         .package(url: "https://github.com/hummingbird-project/hummingbird.git", from: "2.3.0"),
         .package(url: "https://github.com/apple/swift-argument-parser.git", from: "1.4.0"),
-        .package(url: "https://github.com/sersoft-gmbh/swift-smtp.git", from: "2.0.0")
-        /// TODO: Implement Password Confirmation and Reset Flows
-        /// Start by sending an email from an arbirtrary enpoint
-        /// then build confirmation
-        /// then build reset
     ],
     targets: [
         .executableTarget(
