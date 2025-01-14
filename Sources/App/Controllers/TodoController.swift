@@ -45,20 +45,20 @@ struct TodoController {
     struct TodoContext: ChildRequestContext {
         var coreContext: CoreRequestContextStorage
         var user: User
-
+        
         init(context: AppRequestContext) throws {
             coreContext = context.coreContext
             user = try context.requireIdentity()
         }
-
+        
         var requestDecoder: TodosAuthRequestDecoder {
             TodosAuthRequestDecoder()
         }
     }
-
+    
     let fluent: Fluent
     let sessionAuthenticator: SessionAuthenticator<AppRequestContext, UserRepository>
-
+    
     /// Adds todo-related routes to the specified router group
     /// - Note: All routes will be protected by session authentication
     func addRoutes(to group: RouterGroup<AppRequestContext>) {
@@ -71,7 +71,7 @@ struct TodoController {
             .patch(":id", use: update)
             .delete(":id", use: delete)
     }
-
+    
     /// Lists all todos created by the current user
     ///
     /// - Parameters:
@@ -82,7 +82,7 @@ struct TodoController {
     @Sendable func list(_ request: Request, context: TodoContext) async throws -> [Todo] {
         return try await context.user.$todos.get(on: fluent.db())
     }
-
+    
     /// Retrieves a specific todo by its ID
     ///
     /// - Parameters:
@@ -92,18 +92,18 @@ struct TodoController {
     /// - Throws: An error if the todo ID is missing, if the todo is not found, if the user is not authorized to get the todo, or if there's a database error
     @Sendable func get(_ request: Request, context: TodoContext) async throws -> Todo? {
         let id = try context.parameters.require("id", as: UUID.self)
-
+        
         return try await Todo.query(on: fluent.db())
             .filter(\.$id == id)
             .with(\.$owner)  // MARK: Where does $owner come from?
             .first()
     }
-
+    
     /// Request structure for creating a new todo item
     struct CreateTodoRequest: ResponseCodable {
         var title: String
     }
-
+    
     /// Create a new todo for the current user
     ///
     /// - parameters:
@@ -120,19 +120,19 @@ struct TodoController {
             ownerID: context.user.requireID(),
             completed: false
         )
-
+        
         let db = fluent.db()
         _ = try await todo.save(on: db)
-
+        
         return .init(status: .created, response: todo)
     }
-
+    
     /// Request structure for updating an existing todo item
     struct EditTodoRequest: ResponseCodable {
         var title: String?
         var completed: Bool?
     }
-
+    
     /// Update an existing todo for the current user
     ///
     /// This type defines the optional fields that can be updated on a todo.
@@ -147,7 +147,7 @@ struct TodoController {
         let id = try context.parameters.require("id", as: UUID.self)
         let editTodo = try await request.decode(as: EditTodoRequest.self, context: context)
         let db = fluent.db()
-
+        
         guard
             let todo = try await Todo.query(on: db)
                 .filter(\.$id == id)
@@ -156,13 +156,13 @@ struct TodoController {
         else {
             throw HTTPError(.notFound)
         }
-
+        
         guard todo.owner.id == context.user.id else { throw HTTPError(.unauthorized) }
         todo.update(title: editTodo.title, completed: editTodo.completed)
         try await todo.update(on: db)
         return todo
     }
-
+    
     /// Delete an existing todo for the current user by its ID
     ///
     /// - parameters:
@@ -171,11 +171,11 @@ struct TodoController {
     /// - Returns: A HTTP status code indicating successful deletion (`.ok`)
     /// - Throws: An error if the todo ID is missing, if the todo is not found, if the user is not authorized to delete the todo, or if there's a database error
     @Sendable func delete(_ request: Request, context: TodoContext) async throws
-        -> HTTPResponse.Status
+    -> HTTPResponse.Status
     {
         let id = try context.parameters.require("id", as: UUID.self)
         let db = fluent.db()
-
+        
         guard
             let todo = try await Todo.query(on: db)
                 .filter(\.$id == id)
@@ -184,7 +184,7 @@ struct TodoController {
         else {
             throw HTTPError(.notFound)
         }
-
+        
         guard todo.owner.id == context.user.id else { throw HTTPError(.unauthorized) }
         try await todo.delete(on: db)
         return .ok

@@ -18,7 +18,7 @@ struct LayoutView {
     let description: String
     let isLoggedIn: Bool
     let content: String
-
+    
     func render() -> String {
         """
         <!doctype html>

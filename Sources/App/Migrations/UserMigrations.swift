@@ -11,7 +11,7 @@ struct CreateUser: Migration {
             .unique(on: "email")
             .create()
     }
-
+    
     func revert(on database: Database) -> EventLoopFuture<Void> {
         return database.schema("user").delete()
     }

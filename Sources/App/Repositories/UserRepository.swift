@@ -9,9 +9,9 @@ import HummingbirdFluent
 struct UserRepository: UserSessionRepository, UserPasswordRepository {
     typealias User = App.User
     typealias Session = UUID
-
+    
     let fluent: Fluent
-
+    
     /// Find user from session UUID
     ///
     /// - Parameters:
@@ -20,7 +20,7 @@ struct UserRepository: UserSessionRepository, UserPasswordRepository {
     func getUser(from session: UUID, context: UserRepositoryContext) async throws -> User? {
         try await User.find(session, on: fluent.db())
     }
-
+    
     /// Find user via email address
     ///
     ///  - Parameters:

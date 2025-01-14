@@ -20,13 +20,13 @@ struct AuthView {
     let action: AuthAction
     let errorMessage: String
     let user: User?
-
+    
     init(action: AuthAction, errorMessage: String = "", user: User? = nil) {
         self.action = action
         self.errorMessage = errorMessage
         self.user = user
     }
-
+    
     public var signupInputs: String {
         """
         <div class="form-group">
@@ -76,7 +76,7 @@ struct AuthView {
         </div>
         """
     }
-
+    
     private var loginInputs: String {
         """
         <div class="form-group">
@@ -102,7 +102,7 @@ struct AuthView {
         </div>
         """
     }
-
+    
     private var resetPasswordInputs: String {
         """
         <div class="form-group">
@@ -117,43 +117,44 @@ struct AuthView {
         </div>
         """
     }
-
+    
     // generate correct form inputs based on passed `AuthAction`
     private func generateInputs() -> String {
         switch action {
-        case .signup, .updateProfile:
-            return signupInputs
-        case .login:
-            return loginInputs
-        case .resetPassword:
-            return resetPasswordInputs
+            case .signup, .updateProfile:
+                return signupInputs
+            case .login:
+                return loginInputs
+            case .resetPassword:
+                return resetPasswordInputs
         }
     }
-
+    
     func render() -> String {
         let titleText = action.rawValue.replacingOccurrences(of: "-", with: " ").capitalized
         let linkText = action == .login ? "No account yet?" : "Already have an account?"
         let linkHref = action == .login ? "/sign-up" : "/log-in"
-
+        
         return """
-            <form class="surface auth-form" action="\(action.rawValue)" method="post">
-                \(!errorMessage.isEmpty ? "<span class='error'>\(errorMessage)</span>" : "")
-                <h1>\(titleText)</h1>
-                \(generateInputs())
-                \(action == .updateProfile
-              ? """
-                <button id="settings-delete" class="destructive" style="margin-bottom: .5rem;" type="button">
-                    Delete Account
-                </button>
-                <div class="btn-group">
-                  <button id="settings-cancel">Cancel</button>
-                  <button class="primary" type="submit">\(titleText)</button>
-                </div>
-                """
-              : "<button class='primary' type='submit'>\(titleText)</button>"
-            )
-                \(action != .updateProfile && action != .resetPassword ? "<a href='\(linkHref)'>\(linkText)</a>" : "")
-            </form>
-            """
+        <form class="surface auth-form" action="\(action.rawValue)" method="post">
+            \(!errorMessage.isEmpty ? "<span class='error'>\(errorMessage)</span>" : "")
+            <h1>\(titleText)</h1>
+            \(generateInputs())
+            \(action == .updateProfile
+                        ? """
+                        <button id="settings-delete" class="destructive" style="margin-bottom: .5rem;" type="button">
+                            Delete Account
+                        </button>
+                        <div class="btn-group">
+                            <button id="settings-cancel">Cancel</button>
+                            <button class="primary" type="submit">\(titleText)</button>
+                        </div>
+                      """
+                        : "<button class='primary' type='submit'>\(titleText)</button>"
+                )
+            \(action != .updateProfile && action != .resetPassword ? "<a href='\(linkHref)'>\(linkText)</a>" : "")
+        </form>
+        """
     }
+    
 }

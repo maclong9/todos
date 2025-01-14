@@ -10,7 +10,7 @@ struct CreateTodo: AsyncMigration {
             .field("completed", .bool, .required)
             .create()
     }
-
+    
     func revert(on database: Database) async throws {
         return try await database.schema("todos").delete()
     }

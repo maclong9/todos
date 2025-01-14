@@ -24,7 +24,7 @@ struct MailController {
         // 2. Store token with expiration
         // 3. Send email with confirmation link
         throw HTTPError(.notImplemented)
-    }
+    } 
     
     func confirmEmail(_ request: Request) async throws -> Response {
         // TODO: Implement email confirmation
