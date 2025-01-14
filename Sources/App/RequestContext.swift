@@ -12,9 +12,9 @@ struct AppRequestContext: AuthRequestContext, SessionRequestContext, RequestCont
     var sessions: SessionContext<UUID>
 
     init(source: Source) {
-        self.coreContext = .init(source: source)
-        self.identity = nil
-        self.sessions = .init()
+        coreContext = .init(source: source)
+        identity = nil
+        sessions = .init()
     }
 
     var requestDecoder: TodosAuthRequestDecoder {

@@ -18,7 +18,7 @@ struct UserRepository: UserSessionRepository, UserPasswordRepository {
     ///   - session: The UUID for the current session
     ///   - context: Context containing the user session
     func getUser(from session: UUID, context: UserRepositoryContext) async throws -> User? {
-        try await User.find(session, on: self.fluent.db())
+        try await User.find(session, on: fluent.db())
     }
 
     /// Find user via email address
@@ -27,7 +27,7 @@ struct UserRepository: UserSessionRepository, UserPasswordRepository {
     ///   - email: labeled`named` - a string containing the users email address
     ///   - context: Context containing the user session
     func getUser(named email: String, context: UserRepositoryContext) async throws -> User? {
-        try await User.query(on: self.fluent.db())
+        try await User.query(on: fluent.db())
             .filter(\.$email == email)
             .first()
     }

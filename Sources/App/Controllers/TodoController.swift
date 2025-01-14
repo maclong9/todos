@@ -47,8 +47,8 @@ struct TodoController {
         var user: User
 
         init(context: AppRequestContext) throws {
-            self.coreContext = context.coreContext
-            self.user = try context.requireIdentity()
+            coreContext = context.coreContext
+            user = try context.requireIdentity()
         }
 
         var requestDecoder: TodosAuthRequestDecoder {
@@ -63,13 +63,13 @@ struct TodoController {
     /// - Note: All routes will be protected by session authentication
     func addRoutes(to group: RouterGroup<AppRequestContext>) {
         group
-            .add(middleware: self.sessionAuthenticator)
+            .add(middleware: sessionAuthenticator)
             .group(context: TodoContext.self)
-            .get(use: self.list)
-            .get(":id", use: self.get)
-            .post(use: self.create)
-            .patch(":id", use: self.update)
-            .delete(":id", use: self.delete)
+            .get(use: list)
+            .get(":id", use: get)
+            .post(use: create)
+            .patch(":id", use: update)
+            .delete(":id", use: delete)
     }
 
     /// Lists all todos created by the current user
@@ -80,7 +80,7 @@ struct TodoController {
     /// - Returns: An array of todos belonging to the current user
     /// - Throws: An error if the database operation fails or the user ID is missing
     @Sendable func list(_ request: Request, context: TodoContext) async throws -> [Todo] {
-        return try await context.user.$todos.get(on: self.fluent.db())
+        return try await context.user.$todos.get(on: fluent.db())
     }
 
     /// Retrieves a specific todo by its ID
@@ -93,7 +93,7 @@ struct TodoController {
     @Sendable func get(_ request: Request, context: TodoContext) async throws -> Todo? {
         let id = try context.parameters.require("id", as: UUID.self)
 
-        return try await Todo.query(on: self.fluent.db())
+        return try await Todo.query(on: fluent.db())
             .filter(\.$id == id)
             .with(\.$owner)  // MARK: Where does $owner come from?
             .first()
@@ -121,7 +121,7 @@ struct TodoController {
             completed: false
         )
 
-        let db = self.fluent.db()
+        let db = fluent.db()
         _ = try await todo.save(on: db)
 
         return .init(status: .created, response: todo)
@@ -146,7 +146,7 @@ struct TodoController {
     @Sendable func update(_ request: Request, context: TodoContext) async throws -> Todo {
         let id = try context.parameters.require("id", as: UUID.self)
         let editTodo = try await request.decode(as: EditTodoRequest.self, context: context)
-        let db = self.fluent.db()
+        let db = fluent.db()
 
         guard
             let todo = try await Todo.query(on: db)
@@ -174,7 +174,7 @@ struct TodoController {
         -> HTTPResponse.Status
     {
         let id = try context.parameters.require("id", as: UUID.self)
-        let db = self.fluent.db()
+        let db = fluent.db()
 
         guard
             let todo = try await Todo.query(on: db)

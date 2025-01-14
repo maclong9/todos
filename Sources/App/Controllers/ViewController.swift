@@ -31,7 +31,7 @@ struct RedirectMiddleware<Context: AuthRequestContext>: RouterMiddleware {
             return try await next(request, context)
         }
         else {
-            return .redirect(to: "\(self.to)", type: .found)
+            return .redirect(to: "\(to)", type: .found)
         }
     }
 }
@@ -98,19 +98,17 @@ struct ViewController {
     func addRoutes(to router: Router<Context>) {
         // Unauthenticated routes
         router.group()
-            .get("/", use: self.home)
-            .get("/log-in", use: self.login)
-            .post("/log-in", use: self.loginDetails)
-            .get("/sign-up", use: self.signup)
-            .post("/sign-up", use: self.signupDetails)
-            .get("/reset-password", use: self.reset)
-            .post("/reset-password", use: self.resetDetails)
+            .get("/", use: home)
+            .get("/log-in", use: login)
+            .post("/log-in", use: loginDetails)
+            .get("/sign-up", use: signup)
+            .post("/sign-up", use: signupDetails)
 
         // Authenticated routes
         router.group()
-            .add(middleware: self.sessionAuthenticator)
+            .add(middleware: sessionAuthenticator)
             .add(middleware: RedirectMiddleware(to: "/log-in"))
-            .get("/dashboard", use: self.dashboard)
+            .get("/dashboard", use: dashboard)
     }
 
     /// Renders the home page with dynamic content based on auth status
@@ -174,7 +172,7 @@ struct ViewController {
                 name: details.name,
                 email: details.email,
                 password: details.password,
-                db: self.fluent.db()
+                db: fluent.db()
             )
 
             // create session for new user
@@ -326,7 +324,7 @@ struct ViewController {
     @Sendable func dashboard(request: Request, context: Context) async throws -> HTML {
         // get user and list of todos attached to user from database
         let user = try context.requireIdentity()
-        let todos = try await user.$todos.get(on: self.fluent.db())
+        let todos = try await user.$todos.get(on: fluent.db())
 
         return HTML(
             title: "Dashboard",
