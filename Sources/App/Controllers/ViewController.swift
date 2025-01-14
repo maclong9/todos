@@ -90,7 +90,7 @@ struct ViewController {
     ///
     /// This method sets up both authenticated and unauthenticated routes:
     /// - Unauthenticated: Home, login, signup, password reset
-    /// - Authenticated: Dashboard and todo management
+    /// - Authenticated: Dashboard and auth routes
     ///
     /// ## Security Note
     /// The dashboard route is protected by both session authentication and
