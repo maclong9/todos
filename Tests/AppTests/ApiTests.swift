@@ -118,7 +118,7 @@ final class AppTests: XCTestCase, @unchecked Sendable {
     func testCreateUser() async throws {
         let app = try await buildApplication(TestArguments())
         try await app.test(.router) { client in
-            _ = try await createUser(
+            _ = try await self.createUser(
                 .init(name: "Tom Jones", email: "t@jones.com", password: "password123"),
                 client: client
             )
@@ -128,11 +128,11 @@ final class AppTests: XCTestCase, @unchecked Sendable {
     func testLogin() async throws {
         let app = try await buildApplication(TestArguments())
         try await app.test(.router) { client in
-            _ = try await createUser(
+            _ = try await self.createUser(
                 .init(name: "Tom Jones", email: "t@jones.com", password: "password123"),
                 client: client
             )
-            _ = try await login(
+            _ = try await self.login(
                 username: "t@jones.com",
                 password: "password123",
                 client: client
@@ -143,11 +143,11 @@ final class AppTests: XCTestCase, @unchecked Sendable {
     func testURLEncodedLogin() async throws {
         let app = try await buildApplication(TestArguments())
         try await app.test(.router) { client in
-            _ = try await createUser(
+            _ = try await self.createUser(
                 .init(name: "Tom Jones", email: "t@jones.com", password: "password123"),
                 client: client
             )
-            let cookie = try await urlEncodedLogin(
+            let cookie = try await self.urlEncodedLogin(
                 username: "t@jones.com",
                 password: "password123",
                 client: client
@@ -159,11 +159,11 @@ final class AppTests: XCTestCase, @unchecked Sendable {
     func testSession() async throws {
         let app = try await buildApplication(TestArguments())
         try await app.test(.router) { client in
-            _ = try await createUser(
+            _ = try await self.createUser(
                 .init(name: "Tom Jones", email: "t@jones.com", password: "password123"),
                 client: client
             )
-            let cookie = try await login(
+            let cookie = try await self.login(
                 username: "t@jones.com",
                 password: "password123",
                 client: client
@@ -181,16 +181,16 @@ final class AppTests: XCTestCase, @unchecked Sendable {
     func testCreateTodo() async throws {
         let app = try await buildApplication(TestArguments())
         try await app.test(.router) { client in
-            _ = try await createUser(
+            _ = try await self.createUser(
                 .init(name: "Tom Jones", email: "t@jones.com", password: "password123"),
                 client: client
             )
-            let cookie = try await login(
+            let cookie = try await self.login(
                 username: "t@jones.com",
                 password: "password123",
                 client: client
             )
-            let todo = try await createTodo(
+            let todo = try await self.createTodo(
                 .init(title: "Write more tests"),
                 cookie: cookie,
                 client: client
@@ -202,21 +202,21 @@ final class AppTests: XCTestCase, @unchecked Sendable {
     func testGetTodo() async throws {
         let app = try await buildApplication(TestArguments())
         try await app.test(.router) { client in
-            _ = try await createUser(
+            _ = try await self.createUser(
                 .init(name: "Tom Jones", email: "t@jones.com", password: "password123"),
                 client: client
             )
-            let cookie = try await login(
+            let cookie = try await self.login(
                 username: "t@jones.com",
                 password: "password123",
                 client: client
             )
-            let todo = try await createTodo(
+            let todo = try await self.createTodo(
                 .init(title: "Write more tests"),
                 cookie: cookie,
                 client: client
             )
-            let getTodo = try await getTodo(todo.id, cookie: cookie, client: client)
+            let getTodo = try await self.getTodo(todo.id, cookie: cookie, client: client)
             XCTAssertEqual(getTodo?.title, "Write more tests")
         }
     }
@@ -224,24 +224,24 @@ final class AppTests: XCTestCase, @unchecked Sendable {
     func testDeleteTodo() async throws {
         let app = try await buildApplication(TestArguments())
         try await app.test(.router) { client in
-            _ = try await createUser(
+            _ = try await self.createUser(
                 .init(name: "Tom Jones", email: "t@jones.com", password: "password123"),
                 client: client
             )
-            let cookie = try await login(
+            let cookie = try await self.login(
                 username: "t@jones.com",
                 password: "password123",
                 client: client
             )
-            let todo = try await createTodo(
+            let todo = try await self.createTodo(
                 .init(title: "Write more tests"),
                 cookie: cookie,
                 client: client
             )
-            try await deleteTodo(todo.id, cookie: cookie, client: client)
+            try await self.deleteTodo(todo.id, cookie: cookie, client: client)
 
             do {
-                _ = try await getTodo(todo.id, cookie: cookie, client: client)
+                _ = try await self.getTodo(todo.id, cookie: cookie, client: client)
             }
             catch TestError.unexpectedStatus(let status) {
                 XCTAssertEqual(status, .noContent)
@@ -255,27 +255,27 @@ final class AppTests: XCTestCase, @unchecked Sendable {
     func testEditTodo() async throws {
         let app = try await buildApplication(TestArguments())
         try await app.test(.router) { client in
-            _ = try await createUser(
+            _ = try await self.createUser(
                 .init(name: "Tom Jones", email: "t@jones.com", password: "password123"),
                 client: client
             )
-            let cookie = try await login(
+            let cookie = try await self.login(
                 username: "t@jones.com",
                 password: "password123",
                 client: client
             )
-            let todo = try await createTodo(
+            let todo = try await self.createTodo(
                 .init(title: "Write more tests"),
                 cookie: cookie,
                 client: client
             )
-            _ = try await editTodo(
+            _ = try await self.editTodo(
                 todo.id,
                 .init(title: "Written tests", completed: true),
                 cookie: cookie,
                 client: client
             )
-            let editedTodo = try await getTodo(todo.id, cookie: cookie, client: client)
+            let editedTodo = try await self.getTodo(todo.id, cookie: cookie, client: client)
 
             XCTAssertEqual(editedTodo?.title, "Written tests")
             XCTAssertEqual(editedTodo?.completed, true)
@@ -285,31 +285,31 @@ final class AppTests: XCTestCase, @unchecked Sendable {
     func testUnauthorizedEditTodo() async throws {
         let app = try await buildApplication(TestArguments())
         try await app.test(.router) { client in
-            _ = try await createUser(
+            _ = try await self.createUser(
                 .init(name: "Tom Jones", email: "t@jones.com", password: "password123"),
                 client: client
             )
-            _ = try await createUser(
+            _ = try await self.createUser(
                 .init(name: "Lulu", email: "lu@lu.com", password: "admin"),
                 client: client
             )
-            let cookie = try await login(
+            let cookie = try await self.login(
                 username: "t@jones.com",
                 password: "password123",
                 client: client
             )
-            let todo = try await createTodo(
+            let todo = try await self.createTodo(
                 .init(title: "Write more tests"),
                 cookie: cookie,
                 client: client
             )
-            let cookie2 = try await login(
+            let cookie2 = try await self.login(
                 username: "lu@lu.com",
                 password: "admin",
                 client: client
             )
             do {
-                _ = try await editTodo(
+                _ = try await self.editTodo(
                     todo.id,
                     .init(title: "Written tests", completed: true),
                     cookie: cookie2,

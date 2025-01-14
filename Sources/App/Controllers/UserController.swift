@@ -40,13 +40,13 @@ struct UserController {
     /// - Note: The login route is protected by basic authentication
     /// - Note: The current user and logout routes are protected by session authentication
     func addRoutes(to group: RouterGroup<Context>) {
-        group.post(use: create)
+        group.post(use: self.create)
         group.group("login")
-            .add(middleware: BasicAuthenticator(users: sessionAuthenticator.users))
-            .post(use: login)
-        group.add(middleware: sessionAuthenticator)
-            .get(use: current)
-            .post("logout", use: logout)
+            .add(middleware: BasicAuthenticator(users: self.sessionAuthenticator.users))
+            .post(use: self.login)
+        group.add(middleware: self.sessionAuthenticator)
+            .get(use: self.current)
+            .post("logout", use: self.logout)
     }
     
     /// Creates a new user account
@@ -68,7 +68,7 @@ struct UserController {
             name: createUser.name,
             email: createUser.email,
             password: createUser.password,
-            db: fluent.db()
+            db: self.fluent.db()
         )
         
         return .init(status: .created, response: UserResponse(from: user))
