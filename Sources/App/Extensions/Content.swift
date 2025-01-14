@@ -6,10 +6,11 @@ struct HTML: ResponseGenerator {
     let description: String
     let isLoggedIn: Bool?
     let content: String
-    
+
     init(
         title: String,
-        description: String = "Take control of your life with this wonderful todo list application.",
+        description: String =
+            "Take control of your life with this wonderful todo list application.",
         isLoggedIn: Bool? = false,
         content: String
     ) {
@@ -18,7 +19,7 @@ struct HTML: ResponseGenerator {
         self.isLoggedIn = isLoggedIn
         self.content = content
     }
-    
+
     public func response(from request: Request, context: some RequestContext) throws -> Response {
         .init(
             status: .ok,

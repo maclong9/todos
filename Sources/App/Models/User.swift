@@ -15,24 +15,24 @@ import NIOPosix
 /// for authentication support.
 final class User: Model, PasswordAuthenticatable, @unchecked Sendable {
     static let schema = "user"
-    
+
     @ID(key: .id)
     var id: UUID?
-    
+
     @Field(key: "email")
     var email: String
-    
+
     @Field(key: "name")
     var name: String
-    
+
     @Field(key: "password")
     var passwordHash: String?
-    
+
     @Children(for: \.$owner)
     var todos: [Todo]
-    
+
     init() {}
-    
+
     /// Creates a new user with the specified properties
     ///
     /// - Parameters:
@@ -45,13 +45,13 @@ final class User: Model, PasswordAuthenticatable, @unchecked Sendable {
         self.name = name
         self.email = email
         self.passwordHash = passwordHash
-        
+
     }
 }
 
 extension User {
     var username: String { self.name }
-    
+
     /// Creates a new user in the database
     ///
     /// This method handles the complete user creation process, including:
@@ -68,25 +68,25 @@ extension User {
     /// - Throws: `HTTPError.conflict` if the email is already in use
     /// - Returns: The newly created user
     static func create(name: String, email: String, password: String, db: Database) async throws
-    -> User
+        -> User
     {
         let existingUser = try await User.query(on: db)
             .filter(\.$email == email)
             .first()
-        
+
         guard existingUser == nil else {
             throw HTTPError(.conflict, message: "Email address already in use")
         }
-        
+
         let passwordHash = try await NIOThreadPool.singleton.runIfActive {
             Bcrypt.hash(password, cost: 12)
         }
-        
+
         let user = User(name: name, email: email, passwordHash: passwordHash)
         try await user.save(on: db)
         return user
     }
-    
+
     /// Authenticates a user with email and password
     ///
     /// This method verifies the user's credentials by:
@@ -108,11 +108,11 @@ extension User {
         else {
             return nil
         }
-        
+
         let verified = try await NIOThreadPool.singleton.runIfActive {
             Bcrypt.verify(password, hash: passwordHash)
         }
-        
+
         return verified ? user : nil
     }
 }
@@ -127,7 +127,7 @@ struct CreateUserRequest: Decodable {
     let email: String
     /// The user's plain text password
     let password: String
-    
+
     /// Creates a new user creation request
     ///
     /// - Parameters:
@@ -148,14 +148,14 @@ struct CreateUserRequest: Decodable {
 struct UserResponse: ResponseCodable {
     /// The user's unique identifier
     let id: UUID?
-    
+
     /// Creates a new user response
     ///
     /// - Parameter id: The user's unique identifier
     init(id: UUID?) {
         self.id = id
     }
-    
+
     /// Creates a user response from a User model
     ///
     /// - Parameter user: The user model to create the response from

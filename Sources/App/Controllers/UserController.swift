@@ -33,7 +33,7 @@ struct UserController {
     typealias Context = AppRequestContext
     let fluent: Fluent
     let sessionAuthenticator: SessionAuthenticator<Context, UserRepository>
-    
+
     /// Adds authentication and user-related routes to the specified router group
     ///
     /// - Parameter group: The router group to add routes to
@@ -48,7 +48,7 @@ struct UserController {
             .get(use: self.current)
             .post("logout", use: self.logout)
     }
-    
+
     /// Creates a new user account
     ///
     /// This endpoint is primarily used in tests,
@@ -63,17 +63,17 @@ struct UserController {
         UserResponse
     > {
         let createUser = try await request.decode(as: CreateUserRequest.self, context: context)
-        
+
         let user = try await User.create(
             name: createUser.name,
             email: createUser.email,
             password: createUser.password,
             db: self.fluent.db()
         )
-        
+
         return .init(status: .created, response: UserResponse(from: user))
     }
-    
+
     /// Authenticates a user and creates a new session
     ///
     /// This endpoint is primarily used in tests, as user creation is typically handled
@@ -89,7 +89,7 @@ struct UserController {
         try context.sessions.setSession(user.requireID())
         return .ok
     }
-    
+
     /// Ends the current users session
     ///
     /// - Parameters:
@@ -101,7 +101,7 @@ struct UserController {
         context.sessions.clearSession()
         return .ok
     }
-    
+
     /// Ends the current users session
     ///
     /// - Parameters:

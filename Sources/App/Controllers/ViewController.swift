@@ -13,7 +13,7 @@ import HummingbirdFluent
 /// This middleware should be added to any route that requires authentication.
 struct RedirectMiddleware<Context: AuthRequestContext>: RouterMiddleware {
     let to: String
-    
+
     /// Handles the incoming request
     ///
     /// - Parameters:
@@ -78,12 +78,12 @@ struct ViewController {
     typealias Context = AppRequestContext
     let fluent: Fluent
     let sessionAuthenticator: SessionAuthenticator<Context, UserRepository>
-    
+
     init(fluent: Fluent, sessionAuthenticator: SessionAuthenticator<Context, UserRepository>) {
         self.fluent = fluent
         self.sessionAuthenticator = sessionAuthenticator
     }
-    
+
     /// Adds all view routes to the application router
     ///
     /// - Parameter group: The router group to add routes to
@@ -98,6 +98,7 @@ struct ViewController {
     func addRoutes(to router: Router<Context>) {
         // Unauthenticated routes
         router.group()
+<<<<<<< HEAD
             .get("/", use: self.home)
             .get("/log-in", use: self.login)
             .post("/log-in", use: self.loginDetails)
@@ -105,6 +106,13 @@ struct ViewController {
             .post("/sign-up", use: self.signupDetails)
             .get("/reset-password", use: self.reset)
             .post("/reset-password", use: self.resetDetails)
+=======
+            .get("/", use: home)
+            .get("/log-in", use: login)
+            .post("/log-in", use: loginDetails)
+            .get("/sign-up", use: signup)
+            .post("/sign-up", use: signupDetails)
+>>>>>>> parent of c5dd891 (chore: formatting)
 
         // Authenticated routes
         router.group()
@@ -112,7 +120,7 @@ struct ViewController {
             .add(middleware: RedirectMiddleware(to: "/log-in"))
             .get("/dashboard", use: self.dashboard)
     }
-    
+
     /// Renders the home page with dynamic content based on auth status
     ///
     /// - Parameters:
@@ -129,7 +137,7 @@ struct ViewController {
             ).render()
         )
     }
-    
+
     /// Renders the signup page with the registration form
     ///
     /// - Parameters:
@@ -139,7 +147,7 @@ struct ViewController {
     @Sendable func signup(request: Request, context: Context) async throws -> HTML {
         HTML(title: "Sign Up", content: AuthView(action: .signup).render())
     }
-    
+
     /// Request structure for user signup
     struct SignupDetails: Decodable {
         let name: String
@@ -147,7 +155,7 @@ struct ViewController {
         let password: String
         let confirmPassword: String
     }
-    
+
     /// Processes the signup form submission
     ///
     /// This method:
@@ -168,7 +176,7 @@ struct ViewController {
             if details.password != details.confirmPassword {
                 throw HTTPError(.badRequest, message: "Passwords do not match")
             }
-            
+
             // create new user
             let user = try await User.create(
                 name: details.name,
@@ -176,10 +184,10 @@ struct ViewController {
                 password: details.password,
                 db: self.fluent.db()
             )
-            
+
             // create session for new user
             try context.sessions.setSession(user.requireID())
-            
+
             // redirect to dashboard
             return .redirect(to: "/dashboard", type: .found)
         }
@@ -198,7 +206,7 @@ struct ViewController {
             throw error
         }
     }
-    
+
     /// Renders the login page with authentication form
     ///
     /// This route displays the login interface where users can enter their
@@ -213,13 +221,13 @@ struct ViewController {
     @Sendable func login(request: Request, context: Context) async throws -> HTML {
         HTML(title: "Log In", content: AuthView(action: .login).render())
     }
-    
+
     /// Request structure for user log-in
     struct LoginDetails: Decodable {
         let email: String
         let password: String
     }
-    
+
     /// Processes user login attempts and manages authentication
     ///
     /// This route handles the login form submission and:
@@ -236,7 +244,7 @@ struct ViewController {
     /// - Note: Failed login attempts return a 400 status code with error details
     @Sendable func loginDetails(request: Request, context: Context) async throws -> Response {
         let details = try await request.decode(as: LoginDetails.self, context: context)
-        
+
         do {
             // check if user exists in the database and then verify the entered password
             if let user = try await User.login(
@@ -270,7 +278,7 @@ struct ViewController {
             return response
         }
     }
-    
+
     /// Renders the password reset request page
     ///
     /// This route displays a form where users can request a password reset
@@ -285,12 +293,12 @@ struct ViewController {
     @Sendable func reset(request: Request, context: Context) async throws -> HTML {
         HTML(title: "Reset Password", content: AuthView(action: .resetPassword).render())
     }
-    
+
     /// Request structure for password reset
     struct ResetDetails: Decodable {
         let email: String
     }
-    
+
     /// Processes password reset requests
     ///
     /// This route handles the password reset form submission. Currently a placeholder,
@@ -309,7 +317,7 @@ struct ViewController {
         print("reset password for:", details.email)
         return .redirect(to: "/")
     }
-    
+
     /// Renders the user dashboard with todo management interface
     ///
     /// This authenticated route displays:
@@ -326,13 +334,8 @@ struct ViewController {
     @Sendable func dashboard(request: Request, context: Context) async throws -> HTML {
         // get user and list of todos attached to user from database
         let user = try context.requireIdentity()
-<<<<<<< HEAD
         let todos = try await user.$todos.get(on: fluent.db())
-        
-=======
-        let todos = try await user.$todos.get(on: self.fluent.db())
 
->>>>>>> parent of 529f554 (chore: remove unnecassary `self.` calls)
         return HTML(
             title: "Dashboard",
             isLoggedIn: request.cookies["SESSION_ID"] != nil,

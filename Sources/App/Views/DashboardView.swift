@@ -14,13 +14,13 @@ struct DashboardView {
     let user: User
     let todos: [Todo]
     let error: String?
-    
+
     init(user: User, todos: [Todo], error: String? = nil) {
         self.user = user
         self.todos = todos
         self.error = error
     }
-    
+
     func header() -> String {
         """
         <header>
@@ -52,7 +52,7 @@ struct DashboardView {
         </header>
         """
     }
-    
+
     func form() -> String {
         """
         <form class="todo-form">
@@ -72,12 +72,12 @@ struct DashboardView {
         </form>      
         """
     }
-    
+
     func list() -> String {
         if todos.isEmpty {
             return "<p>You have nothing todo...</p>"
         }
-        
+
         let todoItems = todos.map { todo in
             """
             <li class="todo-item \(todo.completed ? "completed" : "")" data-id="\(todo.id!.description)">                
@@ -97,17 +97,17 @@ struct DashboardView {
             </li>
             """
         }.joined(separator: "\n")
-        
+
         return """
             <ul class="todo-list">
                 \(todoItems)
             </ul>
             """
     }
-    
+
     func render() -> String {
         let errorMessage = error.map { "<div class='error'>\($0)</div>" } ?? ""
-        
+
         return """
             <section class="dashboard">
                 \(header())
