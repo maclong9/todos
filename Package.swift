@@ -7,14 +7,9 @@ let package = Package(
   dependencies: [
     .package(url: "https://github.com/vapor/fluent-kit.git", from: "1.48.5"),
     .package(url: "https://github.com/vapor/fluent-sqlite-driver.git", from: "4.7.0"),
-    .package(
-      url: "https://github.com/hummingbird-project/hummingbird-auth.git", from: "2.0.0-rc.5"),
-    .package(
-      url: "https://github.com/hummingbird-project/hummingbird-compression.git",
-      from: "2.0.0-rc"
-    ),
-    .package(
-      url: "https://github.com/hummingbird-project/hummingbird-fluent.git", from: "2.0.0-beta.2"),
+    .package(url: "https://github.com/hummingbird-project/hummingbird-auth.git", from: "2.0.0-rc.5"),
+    .package(url: "https://github.com/hummingbird-project/hummingbird-compression.git", from: "2.0.0-rc"),
+    .package(url: "https://github.com/hummingbird-project/hummingbird-fluent.git", from: "2.0.0-beta.2"),
     .package(url: "https://github.com/hummingbird-project/hummingbird.git", from: "2.3.0"),
     .package(url: "https://github.com/apple/swift-argument-parser.git", from: "1.4.0"),
   ],
