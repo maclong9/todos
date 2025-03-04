@@ -30,87 +30,90 @@ import NIO
 ///  - ``User``
 ///  - ``AppRequestContext``
 struct UserController {
-    typealias Context = AppRequestContext
-    let fluent: Fluent
-    let sessionAuthenticator: SessionAuthenticator<Context, UserRepository>
+  typealias Context = AppRequestContext
+  let fluent: Fluent
+  let sessionAuthenticator: SessionAuthenticator<Context, UserRepository>
 
-    /// Adds authentication and user-related routes to the specified router group
-    ///
-    /// - Parameter group: The router group to add routes to
-    /// - Note: The login route is protected by basic authentication
-    /// - Note: The current user and logout routes are protected by session authentication
-    func addRoutes(to group: RouterGroup<Context>) {
-        group.post(use: self.create)
-        group.group("login")
-            .add(middleware: BasicAuthenticator(users: self.sessionAuthenticator.users))
-            .post(use: self.login)
-        group.add(middleware: self.sessionAuthenticator)
-            .get(use: self.current)
-            .post("logout", use: self.logout)
-    }
+  /// Adds authentication and user-related routes to the specified router group
+  ///
+  /// - Parameter group: The router group to add routes to
+  /// - Note: The login route is protected by basic authentication
+  /// - Note: The current user and logout routes are protected by session authentication
+  func addRoutes(to group: RouterGroup<Context>) {
+    group.post(use: self.create)
+    group.group("login")
+      .add(middleware: BasicAuthenticator(users: self.sessionAuthenticator.users))
+      .post(use: self.login)
+    group.add(middleware: self.sessionAuthenticator)
+      .get(use: self.current)
+      .post("logout", use: self.logout)
+  }
 
-    /// Creates a new user account
-    ///
-    /// This endpoint is primarily used in tests,
-    /// as user creation is typically handled ``ViewController/signupDetails(request:context:)``
-    ///
-    /// - Parameters:
-    ///   - request: The incoming HTTP request
-    ///   - context: The application context
-    /// - Returns: A response containing the created user's information
-    /// - Throws: An error if user creation fails
-    @Sendable func create(_ request: Request, context: Context) async throws -> EditedResponse<
-        UserResponse
-    > {
-        let createUser = try await request.decode(as: CreateUserRequest.self, context: context)
+  /// Creates a new user account
+  ///
+  /// This endpoint is primarily used in tests,
+  /// as user creation is typically handled ``ViewController/signupDetails(request:context:)``
+  ///
+  /// - Parameters:
+  ///   - request: The incoming HTTP request
+  ///   - context: The application context
+  /// - Returns: A response containing the created user's information
+  /// - Throws: An error if user creation fails
+  @Sendable func create(
+    _ request: Request,
+    context: Context
+  ) async throws -> EditedResponse<
+    UserResponse
+  > {
+    let createUser = try await request.decode(as: CreateUserRequest.self, context: context)
 
-        let user = try await User.create(
-            name: createUser.name,
-            email: createUser.email,
-            password: createUser.password,
-            db: self.fluent.db()
-        )
+    let user = try await User.create(
+      name: createUser.name,
+      email: createUser.email,
+      password: createUser.password,
+      db: self.fluent.db()
+    )
 
-        return .init(status: .created, response: UserResponse(from: user))
-    }
+    return .init(status: .created, response: UserResponse(from: user))
+  }
 
-    /// Authenticates a user and creates a new session
-    ///
-    /// This endpoint is primarily used in tests, as user creation is typically handled
-    /// by the web interface through ``ViewController/loginDetails(request:context:)``.
-    ///
-    /// - Parameters:
-    ///   - request: The incoming HTTP request
-    ///   - context: The application context
-    /// - Returns: An HTTP status indicating success
-    /// - Throws: An unauthorized error if authentication fails
-    @Sendable func login(_ request: Request, context: Context) async throws -> HTTPResponse.Status {
-        guard let user = context.identity else { throw HTTPError(.unauthorized) }
-        try context.sessions.setSession(user.requireID())
-        return .ok
-    }
+  /// Authenticates a user and creates a new session
+  ///
+  /// This endpoint is primarily used in tests, as user creation is typically handled
+  /// by the web interface through ``ViewController/loginDetails(request:context:)``.
+  ///
+  /// - Parameters:
+  ///   - request: The incoming HTTP request
+  ///   - context: The application context
+  /// - Returns: An HTTP status indicating success
+  /// - Throws: An unauthorized error if authentication fails
+  @Sendable func login(_ request: Request, context: Context) async throws -> HTTPResponse.Status {
+    guard let user = context.identity else { throw HTTPError(.unauthorized) }
+    try context.sessions.setSession(user.requireID())
+    return .ok
+  }
 
-    /// Ends the current users session
-    ///
-    /// - Parameters:
-    ///   - request: The incoming HTTP request
-    ///   - context: The application context
-    /// - Returns: An HTTP status indicating success
-    /// - Throws: Errors from the session clearing operation
-    @Sendable func logout(_ request: Request, context: Context) async throws -> HTTPResponse.Status {
-        context.sessions.clearSession()
-        return .ok
-    }
+  /// Ends the current users session
+  ///
+  /// - Parameters:
+  ///   - request: The incoming HTTP request
+  ///   - context: The application context
+  /// - Returns: An HTTP status indicating success
+  /// - Throws: Errors from the session clearing operation
+  @Sendable func logout(_ request: Request, context: Context) async throws -> HTTPResponse.Status {
+    context.sessions.clearSession()
+    return .ok
+  }
 
-    /// Ends the current users session
-    ///
-    /// - Parameters:
-    ///   - request: The incoming HTTP request
-    ///   - context: The application context
-    /// - Returns: The currently authenticated `User`
-    /// - Throws: An unauthorized error if user is not signed in
-    @Sendable func current(_ request: Request, context: Context) throws -> UserResponse {
-        let user = try context.requireIdentity()
-        return UserResponse(from: user)
-    }
+  /// Ends the current users session
+  ///
+  /// - Parameters:
+  ///   - request: The incoming HTTP request
+  ///   - context: The application context
+  /// - Returns: The currently authenticated `User`
+  /// - Throws: An unauthorized error if user is not signed in
+  @Sendable func current(_ request: Request, context: Context) throws -> UserResponse {
+    let user = try context.requireIdentity()
+    return UserResponse(from: user)
+  }
 }

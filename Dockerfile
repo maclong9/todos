@@ -1,7 +1,7 @@
 # ================================
 # Build image
 # ================================
-FROM swift:5.10-jammy as build
+FROM swift:6.0-jammy as build
 
 # Install OS updates
 RUN export DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true \
@@ -13,7 +13,7 @@ RUN export DEBIAN_FRONTEND=noninteractive DEBCONF_NONINTERACTIVE_SEEN=true \
 # Set up a build area
 WORKDIR /build
 
-# First just resolve dependencies.
+
 # This creates a cached layer that can be reused
 # as long as your Package.swift/Package.resolved
 # files do not change.
@@ -40,9 +40,9 @@ RUN cp "/usr/libexec/swift/linux/swift-backtrace-static" ./
 # Copy resources bundled by SPM to staging area
 RUN find -L "$(swift build --package-path /build -c release --show-bin-path)/" -regex '.*\.resources$' -exec cp -Ra {} ./ \;
 
-# Copy any resouces from the public directory if the directories exist
+# Copy any resouces from the Public directory if the directories exist
 # Ensure that by default, neither the directory nor any of its contents are writable.
-RUN [ -d /build/public ] && { mv /build/public ./public && chmod -R a-w ./public; } || true
+RUN [ -d /build/Public ] && { mv /build/Public ./public && chmod -R a-w ./public; } || true
 
 # ================================
 # Run image
