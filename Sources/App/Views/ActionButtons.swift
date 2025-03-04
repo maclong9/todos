@@ -19,10 +19,7 @@ struct ActionButtons {
     <div class="btn-group \(isNavigation ? "col" : "")">
         \(isLoggedIn ? "<a class='btn' href='/dashboard'>Dashboard</a>"
                      : "<a class='btn' href='/sign-up'>Get Started</a>")
-          <a class="btn primary" href="https://apple.com/uk/app-store">
-            Get the App
-          </a>
-        </div>
+    </div>
     """
   }
 }

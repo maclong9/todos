@@ -5,9 +5,9 @@ import HummingbirdAuth
 import HummingbirdCompression
 import HummingbirdFluent
 
+// TODO: Fix JS issue with modal for settings opening
 // TODO: Implement email confirmation
 // TODO: Implement password change
-// TODO: Add animations and images on landing page
 
 public protocol AppArguments {
   var inMemoryDatabase: Bool { get }
