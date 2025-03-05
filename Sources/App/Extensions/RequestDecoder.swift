@@ -14,12 +14,12 @@ struct TodosAuthRequestDecoder: RequestDecoder {
     guard let header = request.headers[.contentType] else { throw HTTPError(.badRequest) }
     guard let mediaType = MediaType(from: header) else { throw HTTPError(.badRequest) }
     switch mediaType {
-      case .applicationJson:
-        return try await JSONDecoder().decode(type, from: request, context: context)
-      case .applicationUrlEncoded:
-        return try await URLEncodedFormDecoder().decode(type, from: request, context: context)
-      default:
-        throw HTTPError(.badRequest)
+    case .applicationJson:
+      return try await JSONDecoder().decode(type, from: request, context: context)
+    case .applicationUrlEncoded:
+      return try await URLEncodedFormDecoder().decode(type, from: request, context: context)
+    default:
+      throw HTTPError(.badRequest)
     }
   }
 }

@@ -5,9 +5,10 @@ import HummingbirdAuth
 import HummingbirdCompression
 import HummingbirdFluent
 
-// TODO: Fix JS issue with modal for settings opening
 // TODO: Implement email confirmation
 // TODO: Implement password change
+// TODO: Implement user profile update
+// TODO: Implement user profile delete
 
 public protocol AppArguments {
   var inMemoryDatabase: Bool { get }
@@ -73,18 +74,18 @@ func buildApplication(_ arguments: some AppArguments) async throws -> some Appli
     context: AppRequestContext.self
   )
 
-  // add api and web view routes
-  TodoController(fluent: fluent, sessionAuthenticator: sessionAuthenticator).addRoutes(
-    to: router.group("api/todos")
-  )
-  UserController(fluent: fluent, sessionAuthenticator: sessionAuthenticator).addRoutes(
-    to: router.group("api/users")
-  )
-  ViewController(fluent: fluent, sessionAuthenticator: sessionAuthenticator).addRoutes(to: router)
+  // add api and web routes
+  TodoController(fluent: fluent, sessionAuthenticator: sessionAuthenticator)
+    .addRoutes(to: router.group("api/todos"))
+  UserController(fluent: fluent, sessionAuthenticator: sessionAuthenticator)
+    .addRoutes(to: router.group("api/users"))
+  ViewController(fluent: fluent, sessionAuthenticator: sessionAuthenticator)
+    .addRoutes(to: router)
 
   var app = Application(
     router: router,
-    configuration: .init(address: .hostname(arguments.hostname, port: arguments.port))
+    configuration: .init(
+      address: .hostname(arguments.hostname, port: arguments.port))
   )
   app.addServices(fluent, fluentPersist)
   return app

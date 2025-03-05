@@ -121,12 +121,12 @@ struct AuthView {
   // generate correct form inputs based on passed `AuthAction`
   private func generateInputs() -> String {
     switch action {
-      case .signup, .updateProfile:
-        return signupInputs
-      case .login:
-        return loginInputs
-      case .resetPassword:
-        return resetPasswordInputs
+    case .signup, .updateProfile:
+      return signupInputs
+    case .login:
+      return loginInputs
+    case .resetPassword:
+      return resetPasswordInputs
     }
   }
 

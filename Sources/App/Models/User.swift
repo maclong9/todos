@@ -28,6 +28,15 @@ final class User: Model, PasswordAuthenticatable, @unchecked Sendable {
   @Field(key: "password")
   var passwordHash: String?
 
+  @Field(key: "emailConfirmed")
+  var emailConfirmed: Bool
+
+  @Field(key: "confirmationToken")
+  var confirmationToken: String?
+
+  @Field(key: "resetToken")
+  var resetToken: String?
+
   @Children(for: \.$owner)
   var todos: [Todo]
 
@@ -45,7 +54,7 @@ final class User: Model, PasswordAuthenticatable, @unchecked Sendable {
     self.name = name
     self.email = email
     self.passwordHash = passwordHash
-
+    self.emailConfirmed = false
   }
 }
 
@@ -104,7 +113,9 @@ extension User {
   ///   - db: The database connection to use
   ///
   /// - Returns: The authenticated user if successful, nil otherwise
-  static func login(email: String, password: String, db: Database) async throws -> User? {
+  static func login(email: String, password: String, db: Database) async throws
+    -> User?
+  {
     guard
       let user = try await User.query(on: db)
         .filter(\.$email == email)

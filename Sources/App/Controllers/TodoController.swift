@@ -72,6 +72,8 @@ struct TodoController {
       .delete(":id", use: self.delete)
   }
 
+  // MARK: - Route Handlers
+
   /// Lists all todos created by the current user
   ///
   /// - Parameters:
@@ -95,7 +97,7 @@ struct TodoController {
 
     return try await Todo.query(on: self.fluent.db())
       .filter(\.$id == id)
-      .with(\.$owner)        
+      .with(\.$owner)
       .first()
   }
 

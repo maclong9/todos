@@ -105,7 +105,8 @@ final class AppTests: XCTestCase, @unchecked Sendable {
     }
   }
 
-  func deleteTodo(_ id: String, cookie: String? = nil, client: some TestClientProtocol) async throws {
+  func deleteTodo(_ id: String, cookie: String? = nil, client: some TestClientProtocol) async throws
+  {
     return try await client.execute(
       uri: "/api/todos/\(id)",
       method: .delete,
