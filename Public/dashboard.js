@@ -34,6 +34,7 @@ class TodoDashboardController {
         this.deletionCancel = this.dashboard.querySelector("#deletion-cancel");
         this.logoutButton = this.dashboard.querySelector("#logout-button");
         
+      console.log(this.settingsOpen, this.logoutButton)
         // Dialogs
         this.settingsDialog = this.dashboard.querySelector("#settings");
         this.deletionDialog = this.dashboard.querySelector("#deletion");
@@ -79,13 +80,13 @@ class TodoDashboardController {
      */
     initializeDialogEventListeners() {
         // Settings dialog open/close
-        this.settingsOpen.addEventListener("click", () => settings.showDialog());
+        this.settingsOpen.addEventListener("click", () => settings.showModal());
         this.settingsCancel.addEventListener("click", () => settings.close());
 
         // Open delete account menu
         this.settingsDelete.addEventListener("click", () => {
             settings.close();
-            deletion.showDialog();
+            deletion.showModal();
         });
 
         // Cancel delete account menu
